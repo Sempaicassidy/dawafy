@@ -1,0 +1,1043 @@
+/* ==========================================================================
+   Traditional Monochrome Enterprise UI System
+   Strict Corporate Black/Gray/White (All Flashy Colors & AI Styling Removed)
+   ========================================================================== */
+
+:root {
+    /* Pure Sober Corporate Palette */
+    --body-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --header-bg: #f1f3f5;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #dee2e6;
+    --sidebar-text: #495057;
+    --sidebar-hover: #f1f3f5;
+    --sidebar-active: #e9ecef;
+    --sidebar-active-text: #212529;
+
+    /* Neutrals */
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+    --border-dark: #ced4da;
+    
+    /* Radii */
+    --radius-sm: 2px;
+    --radius-md: 3px;
+    --radius-pill: 2px;
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    background-color: var(--body-bg) !important;
+    color: var(--text-primary) !important;
+    line-height: 1.5;
+    min-height: 100vh;
+    font-size: 0.875rem;
+}
+
+/* Micro-reset for modern layout consistency */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Header Navbar (Solid Clean White, Strict 1px Gray Border)
+   ========================================================================== */
+.navbar-laravel {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    padding: 0.65rem 1.25rem !important;
+}
+
+/* ==========================================================================
+   Human-Crafted Traditional Sidebar (Clean Enterprise Hospital Layout)
+   ========================================================================== */
+.sidebar-traditional {
+    width: 250px;
+    min-width: 250px;
+    flex-shrink: 0;
+    background: #ffffff !important;
+    border-right: 1px solid var(--border-color) !important;
+    min-height: calc(100vh - 58px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.75rem 0.65rem !important;
+    box-shadow: none !important;
+}
+
+.sidebar-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-heading {
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #868e96 !important;
+    padding: 0.85rem 0.75rem 0.25rem 0.75rem !important;
+    margin-top: 0.25rem;
+}
+
+.sidebar-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+    padding: 0.48rem 0.75rem !important;
+    color: #495057 !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    border-radius: var(--radius-sm) !important;
+    transition: background-color 0.12s ease, color 0.12s ease !important;
+    border-left: 3px solid transparent !important;
+}
+
+.sidebar-link i {
+    font-size: 1rem !important;
+    color: #6c757d !important;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-link:hover {
+    background-color: #f1f3f5 !important;
+    color: #212529 !important;
+}
+
+.sidebar-link:hover i {
+    color: #212529 !important;
+}
+
+.sidebar-link.active {
+    background-color: #e9ecef !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+    border-left-color: #212529 !important;
+}
+
+.sidebar-link.active i {
+    color: #212529 !important;
+}
+
+.sidebar-user-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+}
+
+.sidebar-user-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+}
+
+/* Fallback for legacy class */
+.sidebar-laravel {
+    width: 250px;
+    min-width: 250px;
+    flex-shrink: 0;
+    background: #ffffff !important;
+    border-right: 1px solid var(--border-color) !important;
+    min-height: calc(100vh - 58px);
+    padding: 0.75rem 0.65rem !important;
+}
+
+.sidebar-laravel .nav-section-title {
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #868e96 !important;
+    padding: 0.85rem 0.75rem 0.25rem 0.75rem !important;
+}
+
+.sidebar-laravel a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+    padding: 0.48rem 0.75rem !important;
+    color: #495057 !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    border-radius: var(--radius-sm) !important;
+    border-left: 3px solid transparent !important;
+}
+
+.sidebar-laravel a i {
+    font-size: 1rem !important;
+    color: #6c757d !important;
+    width: 18px;
+    text-align: center;
+}
+
+.sidebar-laravel a:hover {
+    background-color: #f1f3f5 !important;
+    color: #212529 !important;
+}
+
+.sidebar-laravel a.active {
+    background-color: #e9ecef !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+    border-left-color: #212529 !important;
+}
+
+/* ==========================================================================
+   Page Titles (Strict Traditional Title Bar - Zero Floating Banner)
+   ========================================================================== */
+.laravel-hero-banner {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-radius: 0 !important;
+    padding: 0 0 0.65rem 0 !important;
+    margin-bottom: 1rem !important;
+    box-shadow: none !important;
+}
+
+.laravel-hero-banner h2 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #212529 !important;
+    margin-bottom: 0.1rem !important;
+}
+
+.laravel-hero-banner p {
+    font-size: 0.8rem !important;
+    color: #6c757d !important;
+    margin-bottom: 0 !important;
+}
+
+.laravel-hero-banner::after {
+    display: none !important;
+}
+
+/* ==========================================================================
+   Cards (Traditional Flat Panels, 1px Border, Zero Shadow)
+   ========================================================================== */
+.card-laravel, .card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+    margin-bottom: 1.25rem !important;
+    overflow: hidden;
+}
+
+.card-laravel .card-header, .card .card-header {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    padding: 0.75rem 1.15rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-weight: 600 !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+.card-laravel .card-header h5, 
+.card-laravel .card-header h6, 
+.card .card-header h5, 
+.card .card-header h6 {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin-bottom: 0 !important;
+}
+
+.card-laravel .card-body, .card .card-body {
+    padding: 1rem 1.15rem !important;
+}
+
+/* ==========================================================================
+   Metric / Stat Counters (Semantic, Executive & Reasonably Colored)
+   ========================================================================== */
+.metric-widget {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 1.1rem 1.25rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+.metric-widget .metric-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.35rem !important;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.metric-widget:hover .metric-icon {
+    transform: scale(1.08);
+}
+
+.metric-widget .metric-value {
+    font-size: 1.55rem !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    margin: 0.2rem 0 0.1rem 0 !important;
+    letter-spacing: -0.02em !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.metric-widget .metric-title {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.15rem !important;
+}
+
+/* Blue Card: Overview, Entities, Volumes, General Totals */
+.metric-widget.metric-blue {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-left: 5px solid #2563eb !important;
+}
+.metric-widget.metric-blue .metric-icon {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+}
+.metric-widget.metric-blue .metric-title {
+    color: #2563eb !important;
+}
+.metric-widget.metric-blue .metric-value {
+    color: #1e3a8a !important;
+}
+
+/* Green Card: Revenue, Paid, Active Operational, Cash, Growth */
+.metric-widget.metric-green {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+    border-left: 5px solid #16a34a !important;
+}
+.metric-widget.metric-green .metric-icon {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+.metric-widget.metric-green .metric-title {
+    color: #16a34a !important;
+}
+.metric-widget.metric-green .metric-value {
+    color: #14532d !important;
+}
+
+/* Yellow / Amber Card: Pending, Inactive, Low Stock, Warning */
+.metric-widget.metric-yellow,
+.metric-widget.metric-amber {
+    background: linear-gradient(145deg, #ffffff 0%, #fffbeb 100%) !important;
+    border: 1px solid #fde68a !important;
+    border-left: 5px solid #d97706 !important;
+}
+.metric-widget.metric-yellow .metric-icon,
+.metric-widget.metric-amber .metric-icon {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+.metric-widget.metric-yellow .metric-title,
+.metric-widget.metric-amber .metric-title {
+    color: #b45309 !important;
+}
+.metric-widget.metric-yellow .metric-value,
+.metric-widget.metric-amber .metric-value {
+    color: #78350f !important;
+}
+
+/* Red / Crimson Card: Expenses, Expired, Critical Alerts, Lifetime SaaS */
+.metric-widget.metric-red,
+.metric-widget.metric-rose {
+    background: linear-gradient(145deg, #ffffff 0%, #fef2f2 100%) !important;
+    border: 1px solid #fecaca !important;
+    border-left: 5px solid #dc2626 !important;
+}
+.metric-widget.metric-red .metric-icon,
+.metric-widget.metric-rose .metric-icon {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+}
+.metric-widget.metric-red .metric-title,
+.metric-widget.metric-rose .metric-title {
+    color: #dc2626 !important;
+}
+.metric-widget.metric-red .metric-value,
+.metric-widget.metric-rose .metric-value {
+    color: #7f1d1d !important;
+}
+
+/* Purple / Indigo Card: Governance, Super Admin, Security, Prescriptions */
+.metric-widget.metric-purple,
+.metric-widget.metric-indigo {
+    background: linear-gradient(145deg, #ffffff 0%, #faf5ff 100%) !important;
+    border: 1px solid #e9d5ff !important;
+    border-left: 5px solid #9333ea !important;
+}
+.metric-widget.metric-purple .metric-icon,
+.metric-widget.metric-indigo .metric-icon {
+    background: #f3e8ff !important;
+    color: #7e22ce !important;
+    border: 1px solid #e9d5ff !important;
+}
+.metric-widget.metric-purple .metric-title,
+.metric-widget.metric-indigo .metric-title {
+    color: #7e22ce !important;
+}
+.metric-widget.metric-purple .metric-value,
+.metric-widget.metric-indigo .metric-value {
+    color: #581c87 !important;
+}
+
+/* Cyan / Teal Card: Online, Integrations, Cloud APIs */
+.metric-widget.metric-cyan,
+.metric-widget.metric-teal {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdfa 100%) !important;
+    border: 1px solid #99f6e4 !important;
+    border-left: 5px solid #0d9488 !important;
+}
+.metric-widget.metric-cyan .metric-icon,
+.metric-widget.metric-teal .metric-icon {
+    background: #ccfbf1 !important;
+    color: #0f766e !important;
+    border: 1px solid #99f6e4 !important;
+}
+.metric-widget.metric-cyan .metric-title,
+.metric-widget.metric-teal .metric-title {
+    color: #0f766e !important;
+}
+.metric-widget.metric-cyan .metric-value,
+.metric-widget.metric-teal .metric-value {
+    color: #134e4a !important;
+}
+
+/* ==========================================================================
+   Buttons (Traditional Sober Charcoal & Neutral Outlines)
+   ========================================================================== */
+.btn-primary, 
+.btn-laravel-primary,
+.btn-success,
+.btn-laravel-green,
+.btn-info,
+.btn-warning {
+    background-color: #343a40 !important;
+    border-color: #343a40 !important;
+    color: #ffffff !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.35rem 0.75rem !important;
+    font-weight: 500 !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+.btn-primary:hover, 
+.btn-laravel-primary:hover,
+.btn-success:hover,
+.btn-laravel-green:hover {
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    color: #ffffff !important;
+    transform: none !important;
+}
+
+.btn-secondary, .btn-outline-secondary, .btn-outline-primary {
+    background-color: #ffffff !important;
+    border-color: #ced4da !important;
+    color: #495057 !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.35rem 0.75rem !important;
+    font-weight: 500 !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
+}
+
+.btn-secondary:hover, .btn-outline-secondary:hover {
+    background-color: #f1f3f5 !important;
+    border-color: #adb5bd !important;
+    color: #212529 !important;
+}
+
+.btn-danger, .btn-outline-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-radius: var(--radius-md) !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
+   Modern Interactive Buttons (Smooth Elevation & Tactile Feedback)
+   ========================================================================== */
+.btn {
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.btn:hover {
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border: 1px solid #1d4ed8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2) !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.btn-success, .btn-laravel-green {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    border: 1px solid #15803d !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.2) !important;
+}
+
+.btn-success:hover, .btn-laravel-green:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%) !important;
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    border: 1px solid #b91c1c !important;
+    color: #ffffff !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25) !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Modern Semantic Badges (Subtle Pastel Tints & Crisp Contrast)
+   ========================================================================== */
+.badge {
+    border-radius: 9999px !important;
+    padding: 0.3rem 0.65rem !important;
+    font-weight: 600 !important;
+    font-size: 0.735rem !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    letter-spacing: 0.01em;
+}
+
+.badge.bg-success, .badge-success, .badge-laravel-green {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+.badge.bg-primary, .badge-primary, .badge-laravel-blue {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+.badge.bg-info, .badge-info, .badge-cyan {
+    background: #cffafe !important;
+    color: #0e7490 !important;
+    border: 1px solid #a5f3fc !important;
+}
+
+.badge.bg-warning, .badge-warning, .badge-laravel-yellow {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+
+.badge.bg-danger, .badge-danger, .badge-laravel-danger {
+    background: #fee2e2 !important;
+    color: #be123c !important;
+    border: 1px solid #fecdd3 !important;
+}
+
+.badge.bg-purple, .badge-purple, .badge-laravel-purple {
+    background: #ede9fe !important;
+    color: #6d28d9 !important;
+    border: 1px solid #ddd6fe !important;
+}
+
+.badge.bg-secondary, .badge-secondary, .badge-laravel-gray {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* ==========================================================================
+   Status Dots & Live Pulse Animations
+   ========================================================================== */
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.status-dot-success, .status-dot-live {
+    background-color: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: daawafyGlowLive 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.status-dot-warning {
+    background-color: #f59e0b;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    animation: daawafyGlowLive 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.status-dot-danger {
+    background-color: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    animation: daawafyGlowLive 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* ==========================================================================
+   Modals (Smooth Pop-In Entrance & Clean Backdrop)
+   ========================================================================== */
+.modal.fade .modal-dialog {
+    transform: scale(0.95) translateY(-10px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.modal-content {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 0.9rem 1.25rem !important;
+}
+
+.modal-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    padding: 0.75rem 1.25rem !important;
+}
+
+/* ==========================================================================
+   Tables (Interactive Highlighting & Modern Padding)
+   ========================================================================== */
+.table-laravel, .table {
+    font-size: 0.825rem !important;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.table thead th {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.04em !important;
+    padding: 0.65rem 0.85rem !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f7ff !important;
+}
+
+.table tbody td {
+    padding: 0.65rem 0.85rem !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle !important;
+}
+
+/* ==========================================================================
+   Point of Sale (POS) Interactive Design System
+   ========================================================================== */
+.pos-grand-total-panel {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    border: 1px solid #334155 !important;
+    border-radius: 14px !important;
+    padding: 1.15rem 1.25rem !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.pos-grand-total-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+}
+
+.pos-total-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.pos-total-amount {
+    font-size: 1.85rem !important;
+    font-weight: 800 !important;
+    color: #34d399 !important;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.pos-cart-badge {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f8fafc !important;
+    border-radius: 9999px !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* Quick Payment Action Buttons */
+.btn-payment-cash {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    border: 1px solid #16a34a !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-payment-cash:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35) !important;
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-payment-mobile {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border: 1px solid #2563eb !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-payment-mobile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35) !important;
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-payment-wallet {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+    border: 1px solid #7c3aed !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-payment-wallet:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35) !important;
+    background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-payment-insurance {
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%) !important;
+    border: 1px solid #0891b2 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-payment-insurance:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(8, 145, 178, 0.35) !important;
+    background: linear-gradient(135deg, #0e7490 0%, #155e75 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Drug Items & Cart Items */
+.drug-item-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+.drug-item-card:hover {
+    transform: translateY(-3px);
+    border-color: #93c5fd !important;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.08) !important;
+}
+
+.cart-item-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.2s ease !important;
+}
+
+.cart-item-card:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.cart-item-new {
+    animation: cartItemHighlight 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Receipt Modal Elements */
+.receipt-success-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    background: #dcfce7;
+    border-radius: 50%;
+    margin-bottom: 0.75rem;
+    animation: checkmarkBounce 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.receipt-success-icon {
+    font-size: 2.5rem !important;
+    color: #16a34a !important;
+}
+
+.printable-receipt-card {
+    background: #ffffff !important;
+    border: 1px dashed #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    position: relative;
+}
+
+/* Form Controls with Smooth Focus Glow */
+.form-control, .form-select {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    color: var(--text-primary) !important;
+    background-color: #ffffff !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* App Canvas Layout */
+.app-container {
+    display: flex;
+    flex-grow: 1;
+    min-height: calc(100vh - 58px);
+}
+
+.app-main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 1.5rem !important;
+    background-color: var(--body-bg);
+}
+
+/* ==========================================================================
+   Core Keyframes & Animation Library
+   ========================================================================== */
+@keyframes daawafyFadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes daawafyGlowLive {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.15);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+}
+
+@keyframes toastSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(110%) scale(0.95);
+    }
+    70% {
+        transform: translateX(-4px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toastCountdown {
+    0% {
+        width: 100%;
+    }
+    100% {
+        width: 0%;
+    }
+}
+
+@keyframes cartItemHighlight {
+    0% {
+        opacity: 0;
+        transform: translateX(25px) scale(0.96);
+        background-color: #ecfdf5;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    }
+    60% {
+        background-color: #d1fae5;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+}
+
+@keyframes totalBump {
+    0% {
+        transform: scale(1);
+    }
+    35% {
+        transform: scale(1.08);
+        color: #10b981;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes checkmarkBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-20deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    70% {
+        transform: scale(0.95) rotate(-2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Animation Utility Classes */
+.animate-fade-in-up {
+    animation: daawafyFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+    animation: daawafyFadeInUp 0.35s ease both;
+}
+
+.animate-bump {
+    animation: totalBump 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.2s; }
+.delay-5 { animation-delay: 0.25s; }
+.delay-6 { animation-delay: 0.3s; }
+

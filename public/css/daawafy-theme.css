@@ -1,0 +1,527 @@
+/* ==========================================================================
+   Traditional Enterprise Medical Theme System (Dignified & Sober)
+   ========================================================================== */
+:root {
+    --primary: #1e293b;
+    --primary-action: #2563eb;
+    --body-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --border-dark: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    background-color: var(--body-bg) !important;
+    color: var(--text-primary) !important;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Tabular figures for all financial & numerical data */
+.tabular-nums, .currency, .price, .table td:nth-child(n+3) {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Header & Banners */
+.daawafy-header {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 0 0 0.65rem 0 !important;
+    margin-bottom: 1rem !important;
+}
+
+.topbar-nav {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Sidebar */
+.daawafy-sidebar {
+    background: #ffffff !important;
+    color: var(--text-secondary) !important;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.daawafy-sidebar a {
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 0.75rem !important;
+    margin-bottom: 2px !important;
+    border-radius: var(--radius-sm) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    border-left: 3px solid transparent !important;
+}
+
+.daawafy-sidebar a:hover {
+    background: #f1f5f9 !important;
+    color: var(--text-primary) !important;
+}
+
+.daawafy-sidebar a.active {
+    background: #e2e8f0 !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    border-left-color: var(--primary) !important;
+}
+
+/* Cards */
+.card {
+    background: #ffffff !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.card-header {
+    background: #f8fafc !important;
+    color: var(--text-primary) !important;
+    padding: 0.6rem 0.9rem !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-weight: 600 !important;
+}
+
+/* Clean Dignified Enterprise Buttons */
+.btn {
+    border-radius: var(--radius-sm) !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary, .btn-light-blue {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover, .btn-light-blue:hover {
+    background-color: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+}
+
+.btn-success, .btn-green {
+    background-color: #16a34a !important;
+    border-color: #16a34a !important;
+    color: #ffffff !important;
+}
+.btn-success:hover, .btn-green:hover {
+    background-color: #15803d !important;
+    border-color: #15803d !important;
+    color: #ffffff !important;
+}
+
+.btn-danger {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+.btn-danger:hover {
+    background-color: #b91c1c !important;
+    border-color: #b91c1c !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary, .btn-dark {
+    background-color: #334155 !important;
+    border-color: #334155 !important;
+    color: #ffffff !important;
+}
+.btn-secondary:hover, .btn-dark:hover {
+    background-color: #1e293b !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-primary {
+    background-color: transparent !important;
+    border-color: #93c5fd !important;
+    color: #1d4ed8 !important;
+}
+.btn-outline-primary:hover {
+    background-color: #eff6ff !important;
+    border-color: #2563eb !important;
+    color: #1d4ed8 !important;
+}
+
+.btn-outline-secondary {
+    background-color: transparent !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+}
+.btn-outline-secondary:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
+    color: #1e293b !important;
+}
+
+.btn-outline-danger {
+    background-color: transparent !important;
+    border-color: #fca5a5 !important;
+    color: #dc2626 !important;
+}
+.btn-outline-danger:hover {
+    background-color: #fef2f2 !important;
+    border-color: #dc2626 !important;
+    color: #b91c1c !important;
+}
+
+/* Form Inputs */
+.form-control, .form-select {
+    border: 1px solid var(--border-dark) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px #3b82f6 !important;
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0 !important;
+    color: var(--text-primary) !important;
+}
+
+.table thead th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 0.72rem !important;
+    padding: 0.65rem 0.75rem !important;
+    border-bottom: 1px solid var(--border-dark) !important;
+}
+
+.table tbody td {
+    padding: 0.6rem 0.75rem !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-size: 0.85rem !important;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* Subtle Status Indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot-success { background-color: #16a34a; }
+.status-dot-warning { background-color: #d97706; }
+.status-dot-danger  { background-color: #dc2626; }
+.status-dot-neutral { background-color: #64748b; }
+
+/* Keyboard Shortcut Tag */
+.kbd-shortcut {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-family: monospace;
+    font-weight: 600;
+    padding: 1px 5px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 3px;
+    color: #475569;
+}
+
+/* Toast Notifications (Modern Glassmorphic Engine) */
+#daawafy-toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.daawafy-toast {
+    pointer-events: auto;
+    min-width: 320px;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    padding: 0.9rem 1rem !important;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.daawafy-toast.toast-success {
+    border-left: 5px solid #16a34a !important;
+}
+.daawafy-toast.toast-success .toast-icon {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.daawafy-toast.toast-warning {
+    border-left: 5px solid #d97706 !important;
+}
+.daawafy-toast.toast-warning .toast-icon {
+    color: #d97706;
+    background: #fef3c7;
+}
+
+.daawafy-toast.toast-danger {
+    border-left: 5px solid #dc2626 !important;
+}
+.daawafy-toast.toast-danger .toast-icon {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.daawafy-toast.toast-info {
+    border-left: 5px solid #2563eb !important;
+}
+.daawafy-toast.toast-info .toast-icon {
+    color: #2563eb;
+    background: #dbeafe;
+}
+
+.toast-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.toast-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #0f172a;
+    margin-bottom: 0.15rem;
+}
+
+.toast-message {
+    font-size: 0.8rem;
+    color: #475569;
+    line-height: 1.35;
+}
+
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: currentColor;
+    opacity: 0.35;
+    width: 100%;
+    animation: toastCountdown linear forwards;
+}
+
+/* ==========================================================================
+   Metric / Stat Counters (Semantic, Executive & Reasonably Colored)
+   ========================================================================== */
+.metric-widget {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 1.1rem 1.25rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+.metric-widget .metric-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.35rem !important;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.metric-widget:hover .metric-icon {
+    transform: scale(1.08);
+}
+
+.metric-widget .metric-value {
+    font-size: 1.55rem !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    margin: 0.2rem 0 0.1rem 0 !important;
+    letter-spacing: -0.02em !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.metric-widget .metric-title {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.15rem !important;
+}
+
+/* Blue Card: Overview, Entities, Volumes, General Totals */
+.metric-widget.metric-blue {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-left: 5px solid #2563eb !important;
+}
+.metric-widget.metric-blue .metric-icon {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+}
+.metric-widget.metric-blue .metric-title {
+    color: #2563eb !important;
+}
+.metric-widget.metric-blue .metric-value {
+    color: #1e3a8a !important;
+}
+
+/* Green Card: Revenue, Paid, Active Operational, Cash, Growth */
+.metric-widget.metric-green {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+    border-left: 5px solid #16a34a !important;
+}
+.metric-widget.metric-green .metric-icon {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+.metric-widget.metric-green .metric-title {
+    color: #16a34a !important;
+}
+.metric-widget.metric-green .metric-value {
+    color: #14532d !important;
+}
+
+/* Yellow / Amber Card: Pending, Inactive, Low Stock, Warning */
+.metric-widget.metric-yellow,
+.metric-widget.metric-amber {
+    background: linear-gradient(145deg, #ffffff 0%, #fffbeb 100%) !important;
+    border: 1px solid #fde68a !important;
+    border-left: 5px solid #d97706 !important;
+}
+.metric-widget.metric-yellow .metric-icon,
+.metric-widget.metric-amber .metric-icon {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+.metric-widget.metric-yellow .metric-title,
+.metric-widget.metric-amber .metric-title {
+    color: #b45309 !important;
+}
+.metric-widget.metric-yellow .metric-value,
+.metric-widget.metric-amber .metric-value {
+    color: #78350f !important;
+}
+
+/* Red / Crimson Card: Expenses, Expired, Critical Alerts, Lifetime SaaS */
+.metric-widget.metric-red,
+.metric-widget.metric-rose {
+    background: linear-gradient(145deg, #ffffff 0%, #fef2f2 100%) !important;
+    border: 1px solid #fecaca !important;
+    border-left: 5px solid #dc2626 !important;
+}
+.metric-widget.metric-red .metric-icon,
+.metric-widget.metric-rose .metric-icon {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+}
+.metric-widget.metric-red .metric-title,
+.metric-widget.metric-rose .metric-title {
+    color: #dc2626 !important;
+}
+.metric-widget.metric-red .metric-value,
+.metric-widget.metric-rose .metric-value {
+    color: #7f1d1d !important;
+}
+
+/* Purple / Indigo Card: Governance, Super Admin, Security, Prescriptions */
+.metric-widget.metric-purple,
+.metric-widget.metric-indigo {
+    background: linear-gradient(145deg, #ffffff 0%, #faf5ff 100%) !important;
+    border: 1px solid #e9d5ff !important;
+    border-left: 5px solid #9333ea !important;
+}
+.metric-widget.metric-purple .metric-icon,
+.metric-widget.metric-indigo .metric-icon {
+    background: #f3e8ff !important;
+    color: #7e22ce !important;
+    border: 1px solid #e9d5ff !important;
+}
+.metric-widget.metric-purple .metric-title,
+.metric-widget.metric-indigo .metric-title {
+    color: #7e22ce !important;
+}
+.metric-widget.metric-purple .metric-value,
+.metric-widget.metric-indigo .metric-value {
+    color: #581c87 !important;
+}
+
+/* Cyan / Teal Card: Online, Integrations, Cloud APIs */
+.metric-widget.metric-cyan,
+.metric-widget.metric-teal {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdfa 100%) !important;
+    border: 1px solid #99f6e4 !important;
+    border-left: 5px solid #0d9488 !important;
+}
+.metric-widget.metric-cyan .metric-icon,
+.metric-widget.metric-teal .metric-icon {
+    background: #ccfbf1 !important;
+    color: #0f766e !important;
+    border: 1px solid #99f6e4 !important;
+}
+.metric-widget.metric-cyan .metric-title,
+.metric-widget.metric-teal .metric-title {
+    color: #0f766e !important;
+}
+.metric-widget.metric-cyan .metric-value,
+.metric-widget.metric-teal .metric-value {
+    color: #134e4a !important;
+}
