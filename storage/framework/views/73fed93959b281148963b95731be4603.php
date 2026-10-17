@@ -81,10 +81,11 @@
 </head>
 <body>
     <?php 
-    $role = session('role') ?? (Auth::check() ? (Auth::user()->role?->name ?? 'Admin') : 'Admin');
+    $role = session('role') ?? (Auth::check() ? (Auth::user()->role?->name ?? 'Manager') : 'Manager');
     $actual_role = session('actual_role') ?? $role;
     $is_masquerade = !empty(session('masquerade_tenant_id'));
     $isSuperAdmin = (($actual_role === 'Super Admin') || ($role === 'Super Admin'));
+    $isManager = in_array($actual_role, ['Manager', 'Admin']) || $isSuperAdmin;
     ?>
     <div class="d-flex flex-column min-vh-100">
         <!-- Executive Top Navigation Bar (Laravel) -->
@@ -110,12 +111,12 @@
                 </div>
                 
                 <div class="d-flex align-items-center gap-2">
-                    <?php if($actual_role === 'Pharmacist' || $actual_role === 'Admin'): ?>
+                    <?php if($actual_role === 'Manager' || $actual_role === 'Admin' || $actual_role === 'Pharmacist'): ?>
                     <form method="POST" action="<?php echo e(route('switch_role')); ?>" class="mb-0">
                         <?php echo csrf_field(); ?>
                         <select name="active_role" class="form-select form-select-sm" style="border-radius: 3px; font-size: 0.8125rem;" onchange="this.form.submit()">
-                            <?php if($actual_role === 'Admin'): ?>
-                                <option value="Admin" <?= $role === 'Admin' ? 'selected' : '' ?>>Admin Mode</option>
+                            <?php if($actual_role === 'Manager' || $actual_role === 'Admin'): ?>
+                                <option value="Manager" <?= in_array($role, ['Manager', 'Admin']) ? 'selected' : '' ?>>Manager Mode</option>
                             <?php endif; ?>
                             <option value="Pharmacist" <?= $role === 'Pharmacist' ? 'selected' : '' ?>>Pharmacist Mode</option>
                             <option value="Cashier" <?= $role === 'Cashier' ? 'selected' : '' ?>>Cashier Mode</option>
@@ -124,7 +125,7 @@
                     <?php endif; ?>
 
                     <div class="px-2 py-1 bg-light border text-secondary" style="border-radius: 3px; font-size: 0.8125rem;">
-                        <i class="bi bi-person me-1"></i> <strong><?= htmlspecialchars($role) ?></strong>
+                        <i class="bi bi-person me-1"></i> <strong><?= htmlspecialchars($role === 'Admin' ? 'Manager' : $role) ?></strong>
                     </div>
 
                     <form id="global-logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="d-none">
@@ -140,7 +141,7 @@
         <?php if(!empty(session('masquerade_tenant_id'))): ?>
             <div class="bg-warning text-dark px-4 py-2 d-flex justify-content-between align-items-center border-bottom shadow-sm">
                 <div class="small fw-bold">
-                    <i class="bi bi-shield-exclamation me-1 fs-6"></i> SUPPORT MODE ACTIVE: You are currently masquerading as Admin for <strong><?= htmlspecialchars($SYS_SETTINGS['company_name'] ?? 'Pharmacy Tenant') ?></strong>.
+                    <i class="bi bi-shield-exclamation me-1 fs-6"></i> SUPPORT MODE ACTIVE: You are currently masquerading as Manager for <strong><?= htmlspecialchars($SYS_SETTINGS['company_name'] ?? 'Pharmacy Tenant') ?></strong>.
                 </div>
                 <a href="<?php echo e(route('saas.exit_support')); ?>" class="btn btn-sm btn-dark px-3 py-1 fw-bold" style="border-radius: 4px;">
                     <i class="bi bi-x-circle me-1"></i> End Support Mode
@@ -190,8 +191,8 @@
 
                         <div class="sidebar-heading">Store Operations</div>
                         <div class="mx-3 my-2 p-2 rounded-3 bg-light border text-muted" style="font-size: 0.75rem; line-height: 1.35;">
-                            <div class="fw-bold text-dark mb-1"><i class="bi bi-info-circle text-primary me-1"></i> Usimamizi wa Duka</div>
-                            Kufanya kazi ndani ya duka fulani (POS, Stoo, Watumiaji), bofya <strong>"Support Login"</strong> kwenye jedwali la maduka.
+                            <div class="fw-bold text-dark mb-1"><i class="bi bi-info-circle text-primary me-1"></i> Store Operations</div>
+                            To manage a specific pharmacy branch (POS, Inventory, Staff), click <strong>"Support Login"</strong> in the pharmacies list.
                         </div>
                     <?php else: ?>
                         
@@ -205,6 +206,9 @@
                         <div class="sidebar-heading">Main Operations</div>
                         <a href="<?php echo e(route('dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('dashboard*') ? 'active' : ''); ?>">
                             <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+                        </a>
+                        <a href="<?php echo e(route('contacts.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('contacts*') ? 'active' : ''); ?>">
+                            <i class="bi bi-journal-bookmark-fill"></i> <span>Address Book & Contacts</span>
                         </a>
                         <a href="<?php echo e(route('pos.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('pos*') ? 'active' : ''); ?>">
                             <i class="bi bi-cart3"></i> <span>Point of Sale</span>

@@ -24,12 +24,14 @@ class Drug extends Model
         'barcode',
         'reorder_level',
         'price',
+        'buying_price',
         'quantity',
         'tenant_id',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'buying_price' => 'decimal:2',
     ];
 
     public function category()

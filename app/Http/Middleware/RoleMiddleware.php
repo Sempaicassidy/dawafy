@@ -23,14 +23,27 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        $activeRole = session('role') ?? $user->role?->name ?? 'Admin';
+        $activeRole = session('role') ?? $user->role?->name ?? 'Manager';
 
         // Super Admin has access everywhere
         if ($activeRole === 'Super Admin' || $user->role?->name === 'Super Admin') {
             return $next($request);
         }
 
-        if (empty($roles) || in_array($activeRole, $roles) || in_array($user->role?->name, $roles)) {
+        // Support Manager and Admin interchangeably
+        $checkRoles = [];
+        foreach ($roles as $r) {
+            $checkRoles[] = $r;
+            if ($r === 'Manager') {
+                $checkRoles[] = 'Admin';
+            }
+            if ($r === 'Admin') {
+                $checkRoles[] = 'Manager';
+            }
+        }
+
+        $userRoleName = $user->role?->name;
+        if (empty($roles) || in_array($activeRole, $checkRoles) || in_array($userRoleName, $checkRoles)) {
             return $next($request);
         }
 

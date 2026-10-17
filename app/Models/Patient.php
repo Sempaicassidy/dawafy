@@ -16,11 +16,14 @@ class Patient extends Model
         'address',
         'date_of_birth',
         'gender',
+        'chronic_condition',
+        'outstanding_debt',
         'tenant_id',
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
+        'outstanding_debt' => 'decimal:2',
     ];
 
     public function transactions()

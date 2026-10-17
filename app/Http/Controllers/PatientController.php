@@ -27,13 +27,15 @@ class PatientController extends Controller
             'address' => 'nullable|string',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
+            'chronic_condition' => 'nullable|string',
+            'outstanding_debt' => 'nullable|numeric|min:0',
         ]);
 
         $validated['tenant_id'] = auth()->user()?->tenant_id ?? session('tenant_id') ?? session('masquerade_tenant_id') ?? 1;
 
         Patient::create($validated);
 
-        return redirect()->route('patients.index')->with('success', 'Patient created successfully');
+        return redirect()->back()->with('success', 'Patient / customer registered successfully.');
     }
 
     public function edit(Patient $patient)
@@ -50,11 +52,13 @@ class PatientController extends Controller
             'address' => 'nullable|string',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
+            'chronic_condition' => 'nullable|string',
+            'outstanding_debt' => 'nullable|numeric|min:0',
         ]);
 
         $patient->update($validated);
 
-        return redirect()->route('patients.index')->with('success', 'Patient updated successfully');
+        return redirect()->back()->with('success', 'Patient details updated successfully.');
     }
 
     public function destroy(Patient $patient)

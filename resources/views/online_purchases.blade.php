@@ -14,12 +14,22 @@
     </div>
 </div>
 
-<?php if(isset($msg)): ?>
-    <div class="alert alert-success rounded-pill px-4 mb-4 animate-fade-in"><i class="bi bi-check-circle me-2"></i> <?= $msg ?></div>
-<?php endif; ?>
-<?php if(isset($error)): ?>
-    <div class="alert alert-danger rounded-pill px-4 mb-4 animate-fade-in"><i class="bi bi-exclamation-triangle me-2"></i> <?= $error ?></div>
-<?php endif; ?>
+@if(session('success') || isset($msg))
+    <div class="alert alert-success rounded-pill px-4 mb-4 animate-fade-in"><i class="bi bi-check-circle me-2"></i> {{ session('success') ?? $msg }}</div>
+@endif
+@if(session('error') || isset($error))
+    <div class="alert alert-danger rounded-pill px-4 mb-4 animate-fade-in"><i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') ?? $error }}</div>
+@endif
+@if(isset($errors) && $errors->any())
+    <div class="alert alert-danger rounded-4 px-4 mb-4 animate-fade-in">
+        <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i> Error:</div>
+        <ul class="mb-0 ps-3">
+            @foreach($errors->all() as $err)
+                <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <!-- System Cards -->
 <div class="row g-3 mb-4 animate-fade-in">

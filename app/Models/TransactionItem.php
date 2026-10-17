@@ -34,6 +34,11 @@ class TransactionItem extends Model
         return $this->belongsTo(Batch::class);
     }
 
+    public function drug()
+    {
+        return $this->belongsTo(Drug::class);
+    }
+
     public function prescription()
     {
         return $this->hasOne(Prescription::class);

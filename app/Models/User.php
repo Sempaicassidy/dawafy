@@ -14,6 +14,7 @@ class User extends Authenticatable
         'username',
         'password',
         'full_name',
+        'phone',
         'role_id',
         'pc_reg_number',
         'tenant_id',
@@ -88,5 +89,25 @@ class User extends Authenticatable
     public function approvedDDA()
     {
         return $this->hasMany(DDARegister::class, 'approved_by_user_id');
+    }
+
+    public function isManager(): bool
+    {
+        return in_array($this->role?->name, ['Manager', 'Admin']);
+    }
+
+    public function isPharmacist(): bool
+    {
+        return $this->role?->name === 'Pharmacist';
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->role?->name === 'Cashier';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role?->name === 'Super Admin';
     }
 }

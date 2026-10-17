@@ -191,7 +191,7 @@
                 <label for="floatingPassword">Password</label>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Sign In to Terminal</button>
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-key me-1"></i> Login</button>
         </form>
 
         <div class="footer-text">

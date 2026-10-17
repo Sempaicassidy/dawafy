@@ -22,6 +22,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompoundingController;
 use App\Http\Controllers\AddonController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,18 +140,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/compounding', [CompoundingController::class, 'index'])->name('compounding.index');
 
     // Addon Routes
-    Route::get('/addons/ai-sales', [AddonController::class, 'aiSales'])->name('addons.ai_sales');
-    Route::get('/addons/erp', [AddonController::class, 'erp'])->name('addons.erp');
-    Route::get('/addons/online-purchases', [AddonController::class, 'onlinePurchases'])->name('addons.online_purchases');
-    Route::get('/addons/whatsapp', [AddonController::class, 'whatsapp'])->name('addons.whatsapp');
-    Route::get('/addons/data-transfer', [AddonController::class, 'dataTransfer'])->name('addons.data_transfer');
-    Route::get('/addons/vat', [AddonController::class, 'vat'])->name('addons.vat');
-    Route::get('/addons/backup', [AddonController::class, 'backup'])->name('addons.backup');
+    Route::match(['GET', 'POST'], '/addons/ai-sales', [AddonController::class, 'aiSales'])->name('addons.ai_sales');
+    Route::match(['GET', 'POST'], '/addons/erp', [AddonController::class, 'erp'])->name('addons.erp');
+    Route::match(['GET', 'POST'], '/addons/online-purchases', [AddonController::class, 'onlinePurchases'])->name('addons.online_purchases');
+    Route::match(['GET', 'POST'], '/addons/whatsapp', [AddonController::class, 'whatsapp'])->name('addons.whatsapp');
+    Route::match(['GET', 'POST'], '/addons/data-transfer', [AddonController::class, 'dataTransfer'])->name('addons.data_transfer');
+    Route::match(['GET', 'POST'], '/addons/vat', [AddonController::class, 'vat'])->name('addons.vat');
+    Route::match(['GET', 'POST'], '/addons/backup', [AddonController::class, 'backup'])->name('addons.backup');
+
+    // Essential Contacts / Address Book Hub
+    Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 
     // Role Switcher Route
     Route::post('/switch-role', function (\Illuminate\Http\Request $request) {
-        $actualRole = session('actual_role') ?? (auth()->user()?->role?->name ?? 'Admin');
-        $allowedRoles = ['Admin', 'Super Admin', 'Pharmacist'];
+        $actualRole = session('actual_role') ?? (auth()->user()?->role?->name ?? 'Manager');
+        $allowedRoles = ['Manager', 'Admin', 'Super Admin', 'Pharmacist'];
         if (in_array($actualRole, $allowedRoles) || !empty(session('masquerade_tenant_id'))) {
             if ($request->has('active_role')) {
                 session(['role' => $request->input('active_role')]);
@@ -161,10 +165,10 @@ Route::middleware(['auth'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Admin-Only Routes
+    | Manager / Admin-Only Routes
     |--------------------------------------------------------------------------
     */
-    Route::middleware(['role:Admin,Super Admin'])->group(function () {
+    Route::middleware(['role:Manager,Admin,Super Admin'])->group(function () {
         // Supplier Routes
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
         Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');

@@ -24,7 +24,8 @@ class UserController extends Controller
                 'id' => $u->id,
                 'username' => $u->username,
                 'full_name' => $u->full_name,
-                'role' => $u->role->name ?? 'Staff',
+                'phone' => $u->phone,
+                'role' => $u->role?->name ?? 'Staff',
                 'is_online' => $isOnline,
                 'last_activity' => $u->last_activity,
                 'last_login_ip' => $u->last_login_ip,
@@ -46,22 +47,35 @@ class UserController extends Controller
         $validated = $request->validate([
             'username' => 'required|string|unique:users,username|max:100',
             'full_name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:50',
             'password' => 'required|string|min:4',
-            'role' => 'required|string',
+            'role' => 'required|string|in:Manager,Pharmacist,Cashier',
+        ], [
+            'username.unique' => "The username ':input' is already taken by another account. Please choose a different username.",
+            'password.min' => 'The password must be at least 4 characters long.',
+            'full_name.required' => 'Please enter the staff member\'s full name.',
         ]);
 
         $role = Role::where('name', $validated['role'])->first();
+        if (!$role && $validated['role'] === 'Manager') {
+            $role = Role::where('name', 'Admin')->first();
+        }
 
-        User::create([
-            'username' => $validated['username'],
-            'full_name' => $validated['full_name'],
-            'password' => Hash::make($validated['password']),
-            'role_id' => $role ? $role->id : null,
+        $cleanUsername = trim($validated['username']);
+        $hashedPassword = Hash::make($validated['password']);
+
+        $user = User::create([
+            'username' => $cleanUsername,
+            'full_name' => trim($validated['full_name']),
+            'phone' => $request->filled('phone') ? trim($request->input('phone')) : null,
+            'password' => $hashedPassword,
+            'password_hash' => $hashedPassword,
+            'role_id' => $role ? $role->id : 2,
             'tenant_id' => $tenant_id,
             'status' => 'Active',
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User account created successfully.');
+        return redirect()->back()->with('success', "Staff account '{$user->username}' registered successfully.");
     }
 
     public function update(Request $request)
@@ -71,25 +85,35 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
-            'role' => 'nullable|string',
+            'phone' => 'nullable|string|max:50',
+            'role' => 'nullable|string|in:Manager,Pharmacist,Cashier',
             'password' => 'nullable|string|min:4',
         ]);
 
         if (!empty($validated['role'])) {
             $role = Role::where('name', $validated['role'])->first();
+            if (!$role && $validated['role'] === 'Manager') {
+                $role = Role::where('name', 'Admin')->first();
+            }
             if ($role) {
                 $user->role_id = $role->id;
             }
         }
 
         if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
+            $hashed = Hash::make($validated['password']);
+            $user->password = $hashed;
+            $user->password_hash = $hashed;
         }
 
-        $user->full_name = $validated['full_name'];
+        if ($request->has('phone')) {
+            $user->phone = $request->filled('phone') ? trim($request->input('phone')) : null;
+        }
+
+        $user->full_name = trim($validated['full_name']);
         $user->save();
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return redirect()->back()->with('success', "Staff account '{$user->username}' updated successfully.");
     }
 
     public function resetSession(User $user)
@@ -99,6 +123,6 @@ class UserController extends Controller
             'last_activity' => null,
         ]);
 
-        return redirect()->route('users.index')->with('success', "Session ya '{$user->username}' imefutwa. Sasa mtumiaji huyo anaweza kuingia upya.");
+        return redirect()->route('users.index')->with('success', "Active session for '{$user->username}' has been terminated successfully. The user can now log in again.");
     }
 }

@@ -72,7 +72,7 @@ class AuthController extends Controller
                 'last_login_ip' => $request->ip(),
             ]);
 
-            $roleName = $user->role?->name ?? 'Admin';
+            $roleName = $user->role?->name ?? 'Manager';
 
             // Store tenant and role in session
             session(['tenant_id' => $user->tenant_id]);
@@ -99,6 +99,7 @@ class AuthController extends Controller
                 'Super Admin' => redirect()->route('saas.dashboard'),
                 'Cashier' => redirect()->route('pos.index'),
                 'Pharmacist' => redirect()->route('prescriptions.index'),
+                'Manager', 'Admin' => redirect()->route('dashboard'),
                 default => redirect()->route('dashboard'),
             };
         }
