@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Traditional Users View -->
+<!-- Traditional Users View with Branch Assignment & Multi-Role Support -->
 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
     <div>
-        <h4 class="fw-bold text-dark mb-0">User Accounts & Permissions</h4>
-        <small class="text-muted">Tenant Staff Roles: Manager, Pharmacist, and Cashier</small>
+        <h4 class="fw-bold text-dark mb-0">Staff Accounts, Branch Assignment & Roles</h4>
+        <small class="text-muted">Manage store staff, assign/transfer across branches, and configure multiple roles</small>
     </div>
     <div>
-        <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
             <i class="bi bi-person-plus me-1"></i> Add Staff Account
         </button>
     </div>
@@ -23,7 +23,7 @@
 
 @if(isset($errors) && $errors->any())
     <div class="alert alert-danger py-2 px-3 mb-3 rounded-4 shadow-sm">
-        <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Registration Error:</div>
+        <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Form Errors:</div>
         <ul class="mb-0 small ps-3">
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
@@ -33,8 +33,11 @@
 @endif
 
 <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-header bg-light py-2 px-3 rounded-top-4">
-        <h6 class="mb-0 fw-semibold text-dark"><i class="bi bi-people me-1 text-primary"></i> Registered Staff Accounts</h6>
+    <div class="card-header bg-light py-2 px-3 rounded-top-4 d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-semibold text-dark"><i class="bi bi-people me-1 text-primary"></i> Registered Staff Accounts (<?= count($users) ?>)</h6>
+        <div class="small text-muted">
+            <i class="bi bi-building me-1"></i> Total Outlets: <strong><?= count($branches ?? []) ?></strong>
+        </div>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -45,22 +48,25 @@
                         <th>Username</th>
                         <th>Full Name</th>
                         <th>Phone</th>
-                        <th>Tenant Role</th>
+                        <th>Assigned Branch</th>
+                        <th>Roles & Permissions</th>
                         <th>Device Session</th>
-                        <th>Created Date</th>
+                        <th>Date Added</th>
                         <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if(empty($users)): ?>
-                        <tr><td colspan="8" class="text-center py-4 text-muted">No user accounts found.</td></tr>
+                        <tr><td colspan="9" class="text-center py-4 text-muted">No staff accounts found.</td></tr>
                     <?php endif; ?>
                     <?php foreach($users as $idx => $u): 
-                        $effectiveRole = ($u['role'] === 'Admin') ? 'Manager' : $u['role'];
+                        $userRoles = $u['all_roles'] ?? [$u['role'] ?? 'Staff'];
                     ?>
                         <tr>
                             <td class="text-muted"><?= $idx + 1 ?></td>
-                            <td class="fw-semibold text-dark"><?= htmlspecialchars($u['username']) ?></td>
+                            <td class="fw-semibold text-dark">
+                                <i class="bi bi-person-circle text-secondary me-1"></i> <?= htmlspecialchars($u['username']) ?>
+                            </td>
                             <td><?= htmlspecialchars($u['full_name'] ?? 'N/A') ?></td>
                             <td>
                                 <?php if(!empty($u['phone'])): ?>
@@ -72,15 +78,24 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                @if($effectiveRole === 'Manager')
-                                    <span class="badge bg-primary px-2 py-1"><i class="bi bi-shield-check me-1"></i> Manager</span>
-                                @elseif($effectiveRole === 'Pharmacist')
-                                    <span class="badge bg-success px-2 py-1"><i class="bi bi-capsule me-1"></i> Pharmacist</span>
-                                @elseif($effectiveRole === 'Cashier')
-                                    <span class="badge bg-info text-dark px-2 py-1"><i class="bi bi-cart me-1"></i> Cashier</span>
-                                @else
-                                    <span class="badge bg-secondary px-2 py-1"><?= htmlspecialchars($effectiveRole) ?></span>
-                                @endif
+                                <span class="badge bg-light text-dark border px-2 py-1">
+                                    <i class="bi bi-shop text-primary me-1"></i> <?= htmlspecialchars($u['branch_name'] ?? 'HQ / Main Store') ?>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <?php foreach($userRoles as $rName): ?>
+                                        <?php if($rName === 'Manager' || $rName === 'Admin'): ?>
+                                            <span class="badge bg-primary px-2 py-1"><i class="bi bi-shield-check me-1"></i> Manager</span>
+                                        <?php elseif($rName === 'Pharmacist'): ?>
+                                            <span class="badge bg-success px-2 py-1"><i class="bi bi-capsule me-1"></i> Pharmacist</span>
+                                        <?php elseif($rName === 'Cashier'): ?>
+                                            <span class="badge bg-info text-dark px-2 py-1"><i class="bi bi-cart me-1"></i> Cashier</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary px-2 py-1"><?= htmlspecialchars($rName) ?></span>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
                             </td>
                             <td>
                                 @if(!empty($u['is_online']))
@@ -92,15 +107,15 @@
                             <td><small class="text-muted"><?= date('d M Y', strtotime($u['created_at'])) ?></small></td>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-1 align-items-center">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" 
-                                            onclick="openEditUserModal('<?= $u['id'] ?>', '<?= addslashes(htmlspecialchars($u['full_name'] ?? '')) ?>', '<?= addslashes(htmlspecialchars($effectiveRole)) ?>', '<?= addslashes(htmlspecialchars($u['phone'] ?? '')) ?>')">
-                                        <i class="bi bi-pencil me-1"></i> Edit
+                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-2 py-0" 
+                                            onclick="openEditUserModal('<?= $u['id'] ?>', '<?= addslashes(htmlspecialchars($u['full_name'] ?? '')) ?>', '<?= addslashes(htmlspecialchars($u['phone'] ?? '')) ?>', '<?= $u['tenant_id'] ?>', <?= htmlspecialchars(json_encode($userRoles), ENT_QUOTES, 'UTF-8') ?>)">
+                                        <i class="bi bi-pencil me-1"></i> Edit / Transfer
                                     </button>
                                     @if(!empty($u['is_online']))
                                         <form method="POST" action="{{ route('users.reset_session', $u['id']) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to terminate this user\'s session?')">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" title="Force Logout / Reset Session">
-                                                <i class="bi bi-power me-1"></i> Terminate Session
+                                                <i class="bi bi-power me-1"></i> Terminate
                                             </button>
                                         </form>
                                     @endif
@@ -142,14 +157,48 @@
                 <label class="fw-bold text-muted small mb-1">Password <span class="text-danger">*</span></label>
                 <input type="password" name="password" class="form-control rounded-pill px-3" placeholder="At least 4 characters" required>
             </div>
+            
+            {{-- Branch Assignment --}}
             <div class="mb-3">
-                <label class="fw-bold text-muted small mb-1">Role & Permissions <span class="text-danger">*</span></label>
-                <select name="role" class="form-select rounded-pill px-3" required>
-                    <option value="Manager" {{ old('role') === 'Manager' ? 'selected' : '' }}>Manager (Full Store Operations & Reports)</option>
-                    <option value="Pharmacist" {{ old('role', 'Pharmacist') === 'Pharmacist' ? 'selected' : '' }}>Pharmacist (POS, Dispensing & Inventory)</option>
-                    <option value="Cashier" {{ old('role') === 'Cashier' ? 'selected' : '' }}>Cashier (POS Checkout Only)</option>
+                <label class="fw-bold text-muted small mb-1">Assign to Branch / Outlet <span class="text-danger">*</span></label>
+                <select name="branch_id" class="form-select rounded-pill px-3" required>
+                    @if(!empty($branches))
+                        @foreach($branches as $b)
+                            <option value="{{ $b->id }}" {{ (old('branch_id', auth()->user()?->tenant_id) == $b->id) ? 'selected' : '' }}>
+                                {{ $b->name }} {{ empty($b->parent_id) ? '(HQ / Main Store)' : '(Branch Outlet)' }}
+                            </option>
+                        @endforeach
+                    @else
+                        <option value="{{ auth()->user()?->tenant_id ?? 1 }}">Default Store / HQ</option>
+                    @endif
                 </select>
-                <small class="text-muted d-block mt-1">Tenant roles are strictly: Manager, Pharmacist, and Cashier.</small>
+                <small class="text-muted d-block mt-1">Select which branch location this employee is assigned to.</small>
+            </div>
+
+            {{-- Multiple Roles Selection --}}
+            <div class="mb-3">
+                <label class="fw-bold text-muted small mb-2 d-block">Roles & Permissions (Select all that apply) <span class="text-danger">*</span></label>
+                <div class="p-3 border rounded-3 bg-light">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Manager" id="add_role_manager">
+                        <label class="form-check-label fw-semibold text-dark" for="add_role_manager">
+                            <span class="badge bg-primary me-1">Manager</span> Full Store Operations, Staff, Branches & Financial Reports
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Pharmacist" id="add_role_pharmacist" checked>
+                        <label class="form-check-label fw-semibold text-dark" for="add_role_pharmacist">
+                            <span class="badge bg-success me-1">Pharmacist</span> POS, Dispensing, Inventory & Drug Verification
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Cashier" id="add_role_cashier">
+                        <label class="form-check-label fw-semibold text-dark" for="add_role_cashier">
+                            <span class="badge bg-info text-dark me-1">Cashier</span> Checkout Register & Receive Payments
+                        </label>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-1">You can assign multiple roles (e.g. both Pharmacist & Cashier) to the same employee.</small>
             </div>
         </div>
         <div class="modal-footer border-0 bg-light rounded-bottom-4">
@@ -161,12 +210,12 @@
   </div>
 </div>
 
-<!-- Modal: Edit User -->
+<!-- Modal: Edit User & Branch Transfer -->
 <div class="modal fade" id="editUserModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content rounded-4 border-0 shadow">
       <div class="modal-header bg-light text-dark py-2 px-3 rounded-top-4">
-        <h6 class="modal-title fw-semibold"><i class="bi bi-pencil-square me-1 text-primary"></i> Edit Staff Account</h6>
+        <h6 class="modal-title fw-semibold"><i class="bi bi-pencil-square me-1 text-primary"></i> Edit Staff Account & Branch Transfer</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <form method="POST" action="{{ route('users.update') }}">
@@ -181,14 +230,45 @@
                 <label class="fw-bold text-muted small mb-1">Phone Number</label>
                 <input type="text" name="phone" id="edit_phone" class="form-control rounded-pill px-3" placeholder="e.g. 0712345678">
             </div>
+
+            {{-- Branch Transfer --}}
             <div class="mb-3">
-                <label class="fw-bold text-muted small mb-1">Role & Permissions <span class="text-danger">*</span></label>
-                <select name="role" id="edit_role" class="form-select rounded-pill px-3" required>
-                    <option value="Manager">Manager (Full Store Operations & Reports)</option>
-                    <option value="Pharmacist">Pharmacist (POS, Dispensing & Inventory)</option>
-                    <option value="Cashier">Cashier (POS Checkout Only)</option>
+                <label class="fw-bold text-muted small mb-1">Branch / Store Location (Transfer Staff)</label>
+                <select name="branch_id" id="edit_branch_id" class="form-select rounded-pill px-3">
+                    @if(!empty($branches))
+                        @foreach($branches as $b)
+                            <option value="{{ $b->id }}">{{ $b->name }} {{ empty($b->parent_id) ? '(HQ / Main Store)' : '(Branch Outlet)' }}</option>
+                        @endforeach
+                    @endif
                 </select>
+                <small class="text-muted">Select another branch to immediately transfer this employee.</small>
             </div>
+
+            {{-- Multiple Roles Selection --}}
+            <div class="mb-3">
+                <label class="fw-bold text-muted small mb-2 d-block">Roles & Permissions (Select all that apply) <span class="text-danger">*</span></label>
+                <div class="p-3 border rounded-3 bg-light">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Manager" id="edit_role_manager">
+                        <label class="form-check-label fw-semibold text-dark" for="edit_role_manager">
+                            <span class="badge bg-primary me-1">Manager</span> Full Operations & Reports
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Pharmacist" id="edit_role_pharmacist">
+                        <label class="form-check-label fw-semibold text-dark" for="edit_role_pharmacist">
+                            <span class="badge bg-success me-1">Pharmacist</span> POS, Dispensing & Inventory
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="roles[]" value="Cashier" id="edit_role_cashier">
+                        <label class="form-check-label fw-semibold text-dark" for="edit_role_cashier">
+                            <span class="badge bg-info text-dark me-1">Cashier</span> Checkout & Receive Payments
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="fw-bold text-muted small mb-1">New Password (Leave blank to keep current)</label>
                 <input type="password" name="password" class="form-control rounded-pill px-3" placeholder="Optional new password">
@@ -204,15 +284,34 @@
 </div>
 
 <script>
-function openEditUserModal(id, fullName, role, phone) {
+function openEditUserModal(id, fullName, phone, branchId, roles) {
     document.getElementById('edit_user_id').value = id;
     document.getElementById('edit_full_name').value = fullName;
     document.getElementById('edit_phone').value = phone || '';
-    const roleSelect = document.getElementById('edit_role');
-    if (roleSelect) {
-        if (role === 'Admin') role = 'Manager';
-        roleSelect.value = role;
+
+    const branchSelect = document.getElementById('edit_branch_id');
+    if (branchSelect && branchId) {
+        branchSelect.value = branchId;
     }
+
+    let roleArray = [];
+    if (Array.isArray(roles)) {
+        roleArray = roles;
+    } else if (typeof roles === 'string') {
+        try {
+            roleArray = JSON.parse(roles);
+        } catch(e) {
+            roleArray = [roles];
+        }
+    }
+    if (roleArray.includes('Admin')) {
+        if (!roleArray.includes('Manager')) roleArray.push('Manager');
+    }
+
+    document.getElementById('edit_role_manager').checked = roleArray.includes('Manager');
+    document.getElementById('edit_role_pharmacist').checked = roleArray.includes('Pharmacist');
+    document.getElementById('edit_role_cashier').checked = roleArray.includes('Cashier');
+
     const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
     editModal.show();
 }

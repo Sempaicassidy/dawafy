@@ -11,10 +11,14 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
+        'pharmacist_id',
+        'cashier_id',
         'shift_id',
         'customer_id',
         'total_amount',
         'payment_method',
+        'status',
+        'dispensed_at',
         'tenant_id',
     ];
 
@@ -22,6 +26,7 @@ class Transaction extends Model
         'total_amount' => 'decimal:2',
         'discount' => 'decimal:2',
         'vat_amount' => 'decimal:2',
+        'dispensed_at' => 'datetime',
     ];
 
     public function user()
@@ -29,9 +34,24 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function pharmacist()
+    {
+        return $this->belongsTo(User::class, 'pharmacist_id');
+    }
+
+    public function cashier()
+    {
+        return $this->belongsTo(User::class, 'cashier_id');
+    }
+
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'customer_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Patient::class, 'customer_id');
     }
 
     public function items()

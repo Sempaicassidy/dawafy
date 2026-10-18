@@ -1,11 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $activeRole = $roleName ?? session('role') ?? (auth()->user()?->role?->name ?? 'Manager');
+@endphp
+
+@if($activeRole === 'Pharmacist')
+    @include('dashboard.pharmacist')
+@elseif($activeRole === 'Cashier')
+    @include('dashboard.cashier')
+@else
 <!-- Executive Owner/Manager Command Center Header -->
 <div class="laravel-hero-banner mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3 pb-2 border-bottom animate-fade-in">
     <div>
         <h2 class="fw-bold mb-1 text-dark">Manager Dashboard</h2>
-        <p class="text-muted mb-0 small">Real-time oversight of store sales, gross & net margins (COGS), inventory health, staff performance, customer credit, and insurance claims.</p>
+        <!-- <p class="text-muted mb-0 small">Real-time oversight of store sales, gross & net margins (COGS), inventory health, staff performance, customer credit, and insurance claims.</p> -->
     </div>
     <div class="d-flex flex-wrap gap-2">
         <a href="{{ route('contacts.index') }}" class="btn btn-outline-secondary text-dark rounded-pill px-3 btn-sm fw-semibold">
@@ -21,11 +30,11 @@
 </div>
 
 <!-- Quick Accordion Controls & Helper Note -->
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
     <div class="text-muted small">
         <i class="bi bi-info-circle me-1 text-primary"></i> Tap any section title to expand. The active section will open while the previous section collapses automatically.
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 align-self-start align-self-md-auto">
         <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1" onclick="expandAllSections()">
             <i class="bi bi-arrows-expand me-1"></i> Expand All
         </button>
@@ -40,10 +49,11 @@
     <!-- 1. FINANCIAL OVERVIEW & CASH FLOW                                         -->
     <!-- ========================================================================= -->
     <div class="dashboard-accordion-header d-flex justify-content-between align-items-center p-3 mb-2 bg-white rounded-4 shadow-sm"
-         data-bs-toggle="collapse"
+         onclick="toggleDashboardSection('#collapseFinancial')"
          data-bs-target="#collapseFinancial"
          aria-expanded="true"
-         aria-controls="collapseFinancial">
+         aria-controls="collapseFinancial"
+         role="button">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle bg-success-subtle text-success p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
                 <i class="bi bi-cash-stack fs-5"></i>
@@ -66,11 +76,11 @@
     <div id="collapseFinancial" class="collapse show" data-bs-parent="#dashboardAccordion">
         <div class="row g-3 mb-4 animate-fade-in pt-1">
     <!-- Today's Sales -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 p-3 h-100 bg-white">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card shadow-sm border-0 border-start border-4 border-success rounded-4 p-3 h-100 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-muted small fw-semibold">Today's Sales (Real-time)</span>
-                <div class="rounded-circle bg-success-subtle text-success p-2" style="width: 36px; height: 36px; display: grid; place-items: center;">
+                <div class="rounded-circle bg-success-subtle text-success p-2">
                     <i class="bi bi-wallet2"></i>
                 </div>
             </div>
@@ -83,11 +93,11 @@
     </div>
 
     <!-- Month & Week Sales -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 p-3 h-100 bg-white">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card shadow-sm border-0 border-start border-4 border-primary rounded-4 p-3 h-100 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-muted small fw-semibold">This Month's Sales</span>
-                <div class="rounded-circle bg-primary-subtle text-primary p-2" style="width: 36px; height: 36px; display: grid; place-items: center;">
+                <div class="rounded-circle bg-primary-subtle text-primary p-2">
                     <i class="bi bi-calendar-check"></i>
                 </div>
             </div>
@@ -100,32 +110,32 @@
     </div>
 
     <!-- Gross Profit & Gross Margin -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 p-3 h-100 bg-white">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card shadow-sm border-0 border-start border-4 border-info rounded-4 p-3 h-100 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-muted small fw-semibold">Gross Profit</span>
-                <div class="rounded-circle bg-info-subtle text-info p-2" style="width: 36px; height: 36px; display: grid; place-items: center;">
+                <div class="rounded-circle bg-info-subtle text-info p-2">
                     <i class="bi bi-pie-chart-fill"></i>
                 </div>
             </div>
-            <h3 class="fw-bold text-success mb-1">TZS {{ number_format($metrics['gross_profit']) }}</h3>
+            <h3 class="fw-bold text-info mb-1">TZS {{ number_format($metrics['gross_profit']) }}</h3>
             <div class="d-flex justify-content-between align-items-center small text-muted">
-                <span>Buying Cost (COGS): <strong class="text-dark">TZS {{ number_format($metrics['cogs']) }}</strong></span>
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">{{ $metrics['gross_margin_pct'] }}% Margin</span>
+                <span>COGS: <strong class="text-dark">TZS {{ number_format($metrics['cogs']) }}</strong></span>
+                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">{{ $metrics['gross_margin_pct'] }}% Margin</span>
             </div>
         </div>
     </div>
 
     <!-- Cash Flow: Revenue vs Expenses -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 rounded-4 p-3 h-100 bg-white">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card shadow-sm border-0 border-start border-4 {{ $metrics['net_cash_flow'] >= 0 ? 'border-purple' : 'border-danger' }} rounded-4 p-3 h-100 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-muted small fw-semibold">Net Cash Flow</span>
-                <div class="rounded-circle {{ $metrics['net_cash_flow'] >= 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} p-2" style="width: 36px; height: 36px; display: grid; place-items: center;">
+                <div class="rounded-circle {{ $metrics['net_cash_flow'] >= 0 ? 'bg-purple-subtle text-purple' : 'bg-danger-subtle text-danger' }} p-2">
                     <i class="bi bi-arrow-left-right"></i>
                 </div>
             </div>
-            <h3 class="fw-bold {{ $metrics['net_cash_flow'] >= 0 ? 'text-success' : 'text-danger' }} mb-1">
+            <h3 class="fw-bold {{ $metrics['net_cash_flow'] >= 0 ? 'text-purple' : 'text-danger' }} mb-1">
                 TZS {{ number_format($metrics['net_cash_flow']) }}
             </h3>
             <div class="d-flex justify-content-between align-items-center small text-muted">
@@ -217,16 +227,18 @@
             </div>
         </div>
     </div>
+    </div> <!-- End row from line 151 -->
     </div> <!-- End #collapseFinancial -->
 
     <!-- ========================================================================= -->
     <!-- 2. INVENTORY & STOCK CONTROL                                              -->
     <!-- ========================================================================= -->
-    <div class="dashboard-accordion-header d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
-         data-bs-toggle="collapse"
+    <div class="dashboard-accordion-header collapsed d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
+         onclick="toggleDashboardSection('#collapseInventory')"
          data-bs-target="#collapseInventory"
          aria-expanded="false"
-         aria-controls="collapseInventory">
+         aria-controls="collapseInventory"
+         role="button">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle bg-primary-subtle text-primary p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
                 <i class="bi bi-box-seam fs-5"></i>
@@ -257,7 +269,7 @@
         <div class="row g-3 mb-4 pt-1">
     <!-- Expiry Alerts -->
     <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 border-start border-4 border-danger rounded-4 h-100">
             <div class="card-header bg-danger-subtle text-danger py-2 px-3 border-bottom d-flex justify-content-between align-items-center rounded-top-4">
                 <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-octagon-fill me-1"></i> Expiring Soon (Expiry Alerts)</h6>
                 <div class="d-flex gap-1">
@@ -309,7 +321,7 @@
 
     <!-- Fast-Moving Items & Low Stock -->
     <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 border-start border-4 border-primary rounded-4 h-100">
             <div class="card-header bg-light py-2 px-3 border-bottom d-flex justify-content-between align-items-center rounded-top-4">
                 <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-fire text-danger me-1"></i> Fast-Moving Items (Top Sellers)</h6>
                 <span class="badge bg-danger rounded-pill">{{ count($metrics['fast_moving_items']) }} Top Items</span>
@@ -361,16 +373,107 @@
             @endif
         </div>
     </div>
+
+    <!-- Stock Refill Requests & Manager Approval Workflow -->
+    <div class="col-12 mt-3">
+        <div class="card shadow-sm border-0 border-start border-4 border-warning rounded-4 bg-white">
+            <div class="card-header bg-white py-3 px-4 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div>
+                    <h6 class="mb-0 fw-bold text-dark">
+                        <i class="bi bi-box-arrow-in-down text-warning me-2 fs-5 align-middle"></i> Dispensary Stock Refill Requests (Manager Confirmation & Issue)
+                    </h6>
+                    <small class="text-muted">Requests submitted by Pharmacists at POS when medicines reach yellow/red stock alerts</small>
+                </div>
+                <div>
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold">
+                        <i class="bi bi-hourglass-split me-1"></i> {{ count($metrics['pending_refills']) }} Pending Approval
+                    </span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-muted small">
+                            <tr>
+                                <th>Medicine Requested</th>
+                                <th>TMDA Class</th>
+                                <th>Dispensary Stock</th>
+                                <th>Requested Amount</th>
+                                <th>Pharmacist</th>
+                                <th>Submitted Time</th>
+                                <th>Notes</th>
+                                <th class="text-end">Manager Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($metrics['pending_refills'] as $refill)
+                            <tr>
+                                <td>
+                                    <strong class="text-dark d-block">{{ $refill->drug?->name ?? 'Medicine' }}</strong>
+                                    <small class="text-muted">{{ $refill->drug?->brand_name ?: $refill->drug?->generic_name }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-secondary border fw-bold">{{ $refill->drug?->tmda_short ?? 'POM' }}</span>
+                                </td>
+                                <td>
+                                    @php
+                                        $currStock = (int)($refill->drug?->stock ?? 0);
+                                        $reorder = (int)($refill->drug?->reorder_level ?: 10);
+                                    @endphp
+                                    @if($currStock <= 0)
+                                        <span class="badge bg-danger-subtle text-danger border border-danger"><i class="bi bi-circle-fill text-danger me-1"></i> 0 (Out of stock)</span>
+                                    @elseif($currStock <= $reorder)
+                                        <span class="badge bg-warning-subtle text-dark border border-warning"><i class="bi bi-circle-fill text-warning me-1"></i> {{ $currStock }} (Low)</span>
+                                    @else
+                                        <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-circle-fill text-success me-1"></i> {{ $currStock }} (OK)</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill px-3 py-1 fs-6 fw-bold">
+                                        {{ $refill->requested_quantity }} units
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-dark">{{ $refill->pharmacist?->name ?? 'Pharmacist' }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ $refill->created_at?->diffForHumans() }}</small>
+                                </td>
+                                <td>
+                                    <small class="text-muted text-truncate d-inline-block" style="max-width: 140px;">{{ $refill->notes ?: '-' }}</small>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-success rounded-pill px-3 fw-bold" onclick="openManagerApproveModal({{ $refill->id }}, '{{ addslashes($refill->drug?->name ?? '') }}', {{ $refill->requested_quantity }}, {{ $currStock }})">
+                                        <i class="bi bi-check2-circle me-1"></i> Review & Issue
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    <i class="bi bi-check-all text-success fs-3 d-block mb-1"></i>
+                                    All dispensary stock refill requests have been processed.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div> <!-- End row from line 266 -->
     </div> <!-- End #collapseInventory -->
 
     <!-- ========================================================================= -->
     <!-- 3. STAFF PERFORMANCE & AUDIT LOGS                                         -->
     <!-- ========================================================================= -->
-    <div class="dashboard-accordion-header d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
-         data-bs-toggle="collapse"
+    <div class="dashboard-accordion-header collapsed d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
+         onclick="toggleDashboardSection('#collapseStaff')"
          data-bs-target="#collapseStaff"
          aria-expanded="false"
-         aria-controls="collapseStaff">
+         aria-controls="collapseStaff"
+         role="button">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle bg-dark-subtle text-dark p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
                 <i class="bi bi-shield-lock-fill fs-5"></i>
@@ -494,16 +597,18 @@
             </div>
         </div>
     </div>
+    </div> <!-- End row from line 403 -->
     </div> <!-- End #collapseStaff -->
 
     <!-- ========================================================================= -->
     <!-- 4. ACCOUNTS RECEIVABLE & INSURANCE CLAIMS                                  -->
     <!-- ========================================================================= -->
-    <div class="dashboard-accordion-header d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
-         data-bs-toggle="collapse"
+    <div class="dashboard-accordion-header collapsed d-flex justify-content-between align-items-center p-3 mb-2 mt-3 bg-white rounded-4 shadow-sm"
+         onclick="toggleDashboardSection('#collapseReceivables')"
          data-bs-target="#collapseReceivables"
          aria-expanded="false"
-         aria-controls="collapseReceivables">
+         aria-controls="collapseReceivables"
+         role="button">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle bg-warning-subtle text-warning p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
                 <i class="bi bi-wallet-fill fs-5"></i>
@@ -534,7 +639,7 @@
         <div class="row g-3 mb-4 pt-1">
     <!-- Insurance Claims Status -->
     <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 border-start border-4 border-warning rounded-4 h-100">
             <div class="card-header bg-light py-2 px-3 border-bottom d-flex justify-content-between align-items-center rounded-top-4">
                 <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-shield-plus me-1 text-danger"></i> Insurance Claims Status (NHIF & Private Funds)</h6>
                 <a href="{{ route('insurance.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0">Insurance Portal</a>
@@ -601,9 +706,9 @@
 
     <!-- Customer Debtors Ledger -->
     <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 border-start border-4 border-danger rounded-4 h-100">
             <div class="card-header bg-light py-2 px-3 border-bottom d-flex justify-content-between align-items-center rounded-top-4">
-                <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-person-exclamation me-1 text-warning"></i> Customer Credit & Debtors Ledger</h6>
+                <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-person-exclamation me-1 text-danger"></i> Customer Credit & Debtors Ledger</h6>
                 <span class="badge bg-danger rounded-pill">Total Owed: TZS {{ number_format($metrics['total_debt']) }}</span>
             </div>
             <div class="card-body p-0">
@@ -671,6 +776,7 @@
             </div>
         </div>
     </div>
+    </div> <!-- End row from line 543 -->
     </div> <!-- End #collapseReceivables -->
 </div> <!-- End #dashboardAccordion -->
 
@@ -706,10 +812,52 @@
 </style>
 
 <script>
+function toggleDashboardSection(targetId) {
+    const targetEl = document.querySelector(targetId);
+    if (!targetEl) return;
+
+    const allCollapses = document.querySelectorAll('#dashboardAccordion .collapse');
+    const allHeaders = document.querySelectorAll('.dashboard-accordion-header');
+    const isCurrentlyShown = targetEl.classList.contains('show');
+
+    if (isCurrentlyShown) {
+        // Toggle closed
+        const bsCol = bootstrap.Collapse.getOrCreateInstance(targetEl, { toggle: false });
+        bsCol.hide();
+        const header = document.querySelector(`[data-bs-target="${targetId}"]`);
+        if (header) {
+            header.setAttribute('aria-expanded', 'false');
+            header.classList.add('collapsed');
+        }
+    } else {
+        // Accordion behavior: close other open sections
+        allCollapses.forEach(col => {
+            if (col !== targetEl && col.classList.contains('show')) {
+                const bsCol = bootstrap.Collapse.getOrCreateInstance(col, { toggle: false });
+                bsCol.hide();
+            }
+        });
+        allHeaders.forEach(h => {
+            if (h.getAttribute('data-bs-target') !== targetId) {
+                h.setAttribute('aria-expanded', 'false');
+                h.classList.add('collapsed');
+            }
+        });
+
+        // Open target section
+        const bsCol = bootstrap.Collapse.getOrCreateInstance(targetEl, { toggle: false });
+        bsCol.show();
+        const header = document.querySelector(`[data-bs-target="${targetId}"]`);
+        if (header) {
+            header.setAttribute('aria-expanded', 'true');
+            header.classList.remove('collapsed');
+        }
+    }
+}
+
 function expandAllSections() {
     const collapsibles = document.querySelectorAll('#dashboardAccordion .collapse');
     collapsibles.forEach(el => {
-        el.removeAttribute('data-bs-parent');
         const bsCol = bootstrap.Collapse.getOrCreateInstance(el, { toggle: false });
         bsCol.show();
     });
@@ -722,7 +870,6 @@ function expandAllSections() {
 function collapseAllSections() {
     const collapsibles = document.querySelectorAll('#dashboardAccordion .collapse');
     collapsibles.forEach(el => {
-        el.setAttribute('data-bs-parent', '#dashboardAccordion');
         const bsCol = bootstrap.Collapse.getOrCreateInstance(el, { toggle: false });
         bsCol.hide();
     });
@@ -736,8 +883,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const accordion = document.getElementById('dashboardAccordion');
     if (accordion) {
         accordion.addEventListener('show.bs.collapse', function (e) {
-            // Restore data-bs-parent when interacting individually
-            e.target.setAttribute('data-bs-parent', '#dashboardAccordion');
             const header = document.querySelector(`[data-bs-target="#${e.target.id}"]`);
             if (header) {
                 header.setAttribute('aria-expanded', 'true');
@@ -753,5 +898,131 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+let currentRefillRequestedQty = 0;
+
+function openManagerApproveModal(refillId, drugName, requestedQty, currentStock) {
+    currentRefillRequestedQty = parseInt(requestedQty);
+    document.getElementById('modalDrugName').innerText = drugName;
+    document.getElementById('modalCurrentStock').innerText = currentStock + ' units';
+    document.getElementById('modalRequestedQty').innerText = requestedQty + ' units';
+    document.getElementById('exactQtySpan').innerText = requestedQty + ' units';
+    
+    // Set form action
+    document.getElementById('refillApproveForm').action = `{{ url('/refills') }}/${refillId}/approve`;
+    
+    // Reset to exact
+    document.getElementById('decisionExact').checked = true;
+    toggleCustomQtyInput();
+
+    new bootstrap.Modal(document.getElementById('managerRefillModal')).show();
+}
+
+function toggleCustomQtyInput() {
+    const isExact = document.getElementById('decisionExact').checked;
+    const isBelow = document.getElementById('decisionBelow').checked;
+    const isAbove = document.getElementById('decisionAbove').checked;
+    const wrapper = document.getElementById('customQtyWrapper');
+    const input = document.getElementById('customQuantityInput');
+    const label = document.getElementById('customQtyLabel');
+
+    if (isExact) {
+        wrapper.classList.add('d-none');
+        input.removeAttribute('required');
+        input.value = currentRefillRequestedQty;
+    } else {
+        wrapper.classList.remove('d-none');
+        input.setAttribute('required', 'required');
+        if (isBelow) {
+            label.innerHTML = `<i class="bi bi-arrow-down-circle text-warning me-1"></i> Enter Reduced Approved Quantity (must be less than ${currentRefillRequestedQty}):`;
+            input.value = Math.max(1, currentRefillRequestedQty - 1);
+            input.max = currentRefillRequestedQty - 1;
+            input.min = 1;
+        } else if (isAbove) {
+            label.innerHTML = `<i class="bi bi-arrow-up-circle text-primary me-1"></i> Enter Increased Approved Quantity (must be more than ${currentRefillRequestedQty}):`;
+            input.value = currentRefillRequestedQty + 5;
+            input.min = currentRefillRequestedQty + 1;
+            input.removeAttribute('max');
+        }
+    }
+}
 </script>
+
+<!-- Modal for Manager Refill Approval (3 Choices) -->
+<div class="modal fade" id="managerRefillModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <form id="refillApproveForm" method="POST">
+        @csrf
+        <div class="modal-header bg-dark text-white py-3 px-4 rounded-top-4">
+          <h6 class="modal-title mb-0 fw-bold"><i class="bi bi-shield-check me-2 text-warning"></i> Confirm & Issue Stock Refill</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="p-3 bg-light rounded-3 mb-3 border">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted small">Medicine Name:</span>
+              <strong class="text-dark" id="modalDrugName"></strong>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted small">Current Dispensary Stock:</span>
+              <span id="modalCurrentStock" class="badge bg-secondary"></span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted small">Requested by Pharmacist:</span>
+              <span class="badge bg-primary fs-7" id="modalRequestedQty"></span>
+            </div>
+          </div>
+
+          <label class="fw-bold text-dark small mb-2 d-block">Select Manager Approval Decision:</label>
+          
+          <!-- Option 1: Exact -->
+          <div class="form-check p-3 border rounded-3 mb-2 bg-white" style="cursor: pointer;" onclick="document.getElementById('decisionExact').checked = true; toggleCustomQtyInput();">
+            <input class="form-check-input" type="radio" name="decision_type" id="decisionExact" value="exact" checked onchange="toggleCustomQtyInput()">
+            <label class="form-check-label fw-bold text-success d-block" for="decisionExact">
+              <i class="bi bi-check-circle-fill me-1"></i> Approve exact requested amount (<span id="exactQtySpan"></span>)
+            </label>
+            <small class="text-muted">Issue precisely what the pharmacist asked for.</small>
+          </div>
+
+          <!-- Option 2: Below -->
+          <div class="form-check p-3 border rounded-3 mb-2 bg-white" style="cursor: pointer;" onclick="document.getElementById('decisionBelow').checked = true; toggleCustomQtyInput();">
+            <input class="form-check-input" type="radio" name="decision_type" id="decisionBelow" value="below" onchange="toggleCustomQtyInput()">
+            <label class="form-check-label fw-bold text-warning-emphasis d-block" for="decisionBelow">
+              <i class="bi bi-arrow-down-circle-fill text-warning me-1"></i> Approve below requested amount
+            </label>
+            <small class="text-muted">Issue fewer units (e.g. central store has limited boxes).</small>
+          </div>
+
+          <!-- Option 3: Above -->
+          <div class="form-check p-3 border rounded-3 mb-3 bg-white" style="cursor: pointer;" onclick="document.getElementById('decisionAbove').checked = true; toggleCustomQtyInput();">
+            <input class="form-check-input" type="radio" name="decision_type" id="decisionAbove" value="above" onchange="toggleCustomQtyInput()">
+            <label class="form-check-label fw-bold text-primary d-block" for="decisionAbove">
+              <i class="bi bi-arrow-up-circle-fill text-primary me-1"></i> Approve more than requested
+            </label>
+            <small class="text-muted">Issue extra units (e.g. clearing central store).</small>
+          </div>
+
+          <!-- Custom Quantity Input -->
+          <div id="customQtyWrapper" class="d-none mb-3 p-3 bg-light rounded-3 border">
+            <label class="fw-bold text-dark small mb-1" id="customQtyLabel">Custom Approved Quantity</label>
+            <input type="number" name="custom_quantity" id="customQuantityInput" class="form-control" min="1" placeholder="Enter amount...">
+          </div>
+
+          <div class="mb-2">
+            <label class="fw-semibold text-secondary small mb-1">Manager Note / Instructions (Optional)</label>
+            <textarea name="notes" class="form-control form-control-sm" rows="2" placeholder="e.g. Issued from Central Store Batch #2026. Restock on shelf."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer py-2 px-4 border-top">
+          <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+            <i class="bi bi-check-lg me-1"></i> Confirm & Issue Stock
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@endif
 @endsection

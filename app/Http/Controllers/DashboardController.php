@@ -12,6 +12,7 @@ use App\Models\Patient;
 use App\Models\AuditLog;
 use App\Models\InsuranceClaim;
 use App\Models\InsuranceProvider;
+use App\Models\StockRefillRequest;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -190,7 +191,122 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // =========================================================================
+        // 5. ROLE-SPECIFIC METRICS (Pharmacist Clinical Ops & Cashier Cash Drawer)
+        // =========================================================================
+        $userId = auth()->id() ?? 1;
+
+        // Pharmacist metrics
+        $myTodayTxnsCount = Transaction::where('tenant_id', $tenant_id)
+            ->where('user_id', $userId)
+            ->whereDate('created_at', today())
+            ->count();
+
+        $myTodaySalesVol = (float)(Transaction::where('tenant_id', $tenant_id)
+            ->where('user_id', $userId)
+            ->whereDate('created_at', today())
+            ->sum('total_amount') ?? 0);
+
+        $nearExpiryFEFO = Batch::with('drug')
+            ->where('tenant_id', $tenant_id)
+            ->where('quantity', '>', 0)
+            ->where('expiry_date', '<=', now()->addMonths(2))
+            ->where('expiry_date', '>=', now()->startOfDay())
+            ->orderBy('expiry_date', 'asc')
+            ->limit(10)
+            ->get();
+
+        $recentPrescriptions = [];
+        try {
+            $recentPrescriptions = \App\Models\Prescription::with(['transactionItem.batch.drug'])
+                ->latest()
+                ->limit(6)
+                ->get();
+        } catch (\Exception $e) {
+            $recentPrescriptions = [];
+        }
+
+        $myRecentDispenses = Transaction::with(['items.drug', 'patient'])
+            ->where('tenant_id', $tenant_id)
+            ->where('user_id', $userId)
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        // Cashier metrics
+        $activeShift = null;
+        try {
+            $activeShift = \App\Models\Shift::where('user_id', $userId)
+                ->whereNull('end_time')
+                ->latest()
+                ->first();
+        } catch (\Exception $e) {
+            $activeShift = null;
+        }
+
+        $openingFloat = $activeShift ? (float)($activeShift->opening_balance ?? $activeShift->opening_cash ?? 0) : 0;
+        $shiftStartTime = $activeShift ? $activeShift->start_time : now()->startOfDay();
+        $shiftCashSales = (float)(Transaction::where('tenant_id', $tenant_id)
+            ->where(function($q) use ($userId) {
+                $q->where('cashier_id', $userId)->orWhere('user_id', $userId);
+            })
+            ->where('payment_method', 'Cash')
+            ->whereIn('status', ['paid', 'completed'])
+            ->where('created_at', '>=', $shiftStartTime)
+            ->sum('total_amount') ?? 0);
+        $expectedDrawerCash = $openingFloat + $shiftCashSales;
+
+        $todayPaymentBreakdown = Transaction::where('tenant_id', $tenant_id)
+            ->whereDate('created_at', today())
+            ->whereIn('status', ['paid', 'completed'])
+            ->select('payment_method', DB::raw('SUM(total_amount) as total'), DB::raw('COUNT(*) as count'))
+            ->groupBy('payment_method')
+            ->get();
+
+        $myTodayReceipts = Transaction::with(['patient', 'customer', 'pharmacist', 'cashier', 'items.drug'])
+            ->where('tenant_id', $tenant_id)
+            ->where(function($q) use ($userId) {
+                $q->where('cashier_id', $userId)->orWhere('user_id', $userId);
+            })
+            ->whereIn('status', ['paid', 'completed'])
+            ->whereDate('created_at', today())
+            ->latest()
+            ->limit(20)
+            ->get();
+
+        $todayPettyExpenses = Expense::where('tenant_id', $tenant_id)
+            ->whereDate('created_at', today())
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $pendingRefills = StockRefillRequest::with(['drug', 'pharmacist'])
+            ->where('tenant_id', $tenant_id)
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        $pendingPayments = Transaction::with(['items.drug', 'pharmacist', 'patient'])
+            ->where('tenant_id', $tenant_id)
+            ->where('status', 'pending_payment')
+            ->latest()
+            ->get();
+
+        $readyToDispense = Transaction::with(['items.drug', 'pharmacist', 'cashier', 'patient'])
+            ->where('tenant_id', $tenant_id)
+            ->where('status', 'paid')
+            ->latest()
+            ->get();
+
         $metrics = [
+            // Current Role
+            'role' => $roleName,
+
+            // Queues for workflows
+            'pending_refills' => $pendingRefills,
+            'pending_payments' => $pendingPayments,
+            'ready_to_dispense' => $readyToDispense,
+
             // Financial
             'today_sales' => $todaySales,
             'today_txns' => $todayTxnCount,
@@ -225,12 +341,32 @@ class DashboardController extends Controller
 
             // Recent
             'recent_txns' => $recentTxns,
+
+            // Pharmacist Specific
+            'pharmacist' => [
+                'my_today_txns_count' => $myTodayTxnsCount,
+                'my_today_sales_vol' => $myTodaySalesVol,
+                'near_expiry_fefo' => $nearExpiryFEFO,
+                'recent_prescriptions' => $recentPrescriptions,
+                'my_recent_dispenses' => $myRecentDispenses,
+            ],
+
+            // Cashier Specific
+            'cashier' => [
+                'active_shift' => $activeShift,
+                'opening_float' => $openingFloat,
+                'shift_cash_sales' => $shiftCashSales,
+                'expected_drawer_cash' => $expectedDrawerCash,
+                'today_payment_breakdown' => $todayPaymentBreakdown,
+                'my_today_receipts' => $myTodayReceipts,
+                'today_petty_expenses' => $todayPettyExpenses,
+            ],
         ];
 
         if (request()->wantsJson()) {
             return response()->json($metrics);
         }
 
-        return view('dashboard', compact('metrics'));
+        return view('dashboard', compact('metrics', 'roleName'));
     }
 }

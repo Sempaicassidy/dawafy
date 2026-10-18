@@ -270,179 +270,341 @@ body {
 }
 
 /* ==========================================================================
-   Metric / Stat Counters (Semantic, Executive & Reasonably Colored)
+   Metric / Stat Counters (Decorated Executive Style - Exactly As Requested)
    ========================================================================== */
-.metric-widget {
+.metric-widget,
+.card-stat,
+.card.border-start.border-4,
+.card-laravel.border-start.border-4 {
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    padding: 1.1rem 1.25rem !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    border-radius: 16px !important;
+    padding: 1.15rem 1.35rem !important;
+    box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
     position: relative;
     overflow: hidden;
+    border-left-width: 6px !important;
 }
 
-.metric-widget:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06) !important;
+/* Exempt table/list/complex panel cards that have a card-header or card-body from metric card padding */
+.card.border-start.border-4:has(.card-header),
+.card.border-start.border-4:has(.card-body),
+.card-laravel.border-start.border-4:has(.card-header),
+.card-laravel.border-start.border-4:has(.card-body) {
+    padding: 0 !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
 }
 
-.metric-widget .metric-icon {
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 10px !important;
+.metric-widget:hover,
+.card-stat:hover,
+.card.border-start.border-4:not(:has(.card-header)):hover,
+.card-laravel.border-start.border-4:not(:has(.card-header)):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Icon Box inside Decorated Cards */
+.metric-widget .metric-icon,
+.card.border-start.border-4 .rounded-circle,
+.card.border-start.border-4 .metric-icon,
+.card-laravel.border-start.border-4 .rounded-circle,
+.card-laravel.border-start.border-4 .metric-icon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.35rem !important;
+    font-size: 1.45rem !important;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.22s ease;
 }
 
-.metric-widget:hover .metric-icon {
+.metric-widget:hover .metric-icon,
+.card.border-start.border-4:hover .rounded-circle,
+.card.border-start.border-4:hover .metric-icon,
+.card-laravel.border-start.border-4:hover .rounded-circle,
+.card-laravel.border-start.border-4:hover .metric-icon {
     transform: scale(1.08);
 }
 
-.metric-widget .metric-value {
-    font-size: 1.55rem !important;
-    font-weight: 800 !important;
+/* Value & Numbers */
+.metric-widget .metric-value,
+.card.border-start.border-4:not(:has(.card-header)) h3,
+.card.border-start.border-4:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-4:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-4:not(:has(.card-header)) h4 {
+    font-size: 1.75rem !important;
+    font-weight: 900 !important;
     line-height: 1.25 !important;
-    margin: 0.2rem 0 0.1rem 0 !important;
+    margin: 0.25rem 0 0.15rem 0 !important;
     letter-spacing: -0.02em !important;
     font-variant-numeric: tabular-nums;
 }
 
-.metric-widget .metric-title {
-    font-size: 0.72rem !important;
-    font-weight: 700 !important;
+/* Title / Labels */
+.metric-widget .metric-title,
+.card.border-start.border-4:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-4:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-4:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-4:not(:has(.card-header)) span.small {
+    font-size: 0.74rem !important;
+    font-weight: 800 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    margin-bottom: 0.15rem !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 0.2rem !important;
 }
 
-/* Blue Card: Overview, Entities, Volumes, General Totals */
-.metric-widget.metric-blue {
-    background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%) !important;
+/* ==========================================================================
+   DECORATED COLOR THEMES (Blue, Cyan/Teal, Green, Purple, Amber, Red, Dark)
+   ========================================================================== */
+
+/* 1. Blue Theme (Primary) */
+.metric-widget.metric-blue,
+.card.border-start.border-primary:not(:has(.card-header)),
+.card-laravel.border-start.border-primary:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%) !important;
     border: 1px solid #bfdbfe !important;
-    border-left: 5px solid #2563eb !important;
+    border-left: 6px solid #2563eb !important;
 }
-.metric-widget.metric-blue .metric-icon {
+.metric-widget.metric-blue .metric-icon,
+.card.border-start.border-primary .rounded-circle,
+.card.border-start.border-primary .metric-icon,
+.card-laravel.border-start.border-primary .rounded-circle,
+.card-laravel.border-start.border-primary .metric-icon {
     background: #dbeafe !important;
     color: #1d4ed8 !important;
     border: 1px solid #bfdbfe !important;
 }
-.metric-widget.metric-blue .metric-title {
+.metric-widget.metric-blue .metric-title,
+.card.border-start.border-primary:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-primary:not(:has(.card-header)) .text-muted.small {
     color: #2563eb !important;
 }
-.metric-widget.metric-blue .metric-value {
+.metric-widget.metric-blue .metric-value,
+.card.border-start.border-primary:not(:has(.card-header)) h3,
+.card.border-start.border-primary:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-primary:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-primary:not(:has(.card-header)) h4 {
     color: #1e3a8a !important;
 }
 
-/* Green Card: Revenue, Paid, Active Operational, Cash, Growth */
-.metric-widget.metric-green {
-    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%) !important;
-    border: 1px solid #bbf7d0 !important;
-    border-left: 5px solid #16a34a !important;
-}
-.metric-widget.metric-green .metric-icon {
-    background: #dcfce7 !important;
-    color: #15803d !important;
-    border: 1px solid #bbf7d0 !important;
-}
-.metric-widget.metric-green .metric-title {
-    color: #16a34a !important;
-}
-.metric-widget.metric-green .metric-value {
-    color: #14532d !important;
-}
-
-/* Yellow / Amber Card: Pending, Inactive, Low Stock, Warning */
-.metric-widget.metric-yellow,
-.metric-widget.metric-amber {
-    background: linear-gradient(145deg, #ffffff 0%, #fffbeb 100%) !important;
-    border: 1px solid #fde68a !important;
-    border-left: 5px solid #d97706 !important;
-}
-.metric-widget.metric-yellow .metric-icon,
-.metric-widget.metric-amber .metric-icon {
-    background: #fef3c7 !important;
-    color: #b45309 !important;
-    border: 1px solid #fde68a !important;
-}
-.metric-widget.metric-yellow .metric-title,
-.metric-widget.metric-amber .metric-title {
-    color: #b45309 !important;
-}
-.metric-widget.metric-yellow .metric-value,
-.metric-widget.metric-amber .metric-value {
-    color: #78350f !important;
-}
-
-/* Red / Crimson Card: Expenses, Expired, Critical Alerts, Lifetime SaaS */
-.metric-widget.metric-red,
-.metric-widget.metric-rose {
-    background: linear-gradient(145deg, #ffffff 0%, #fef2f2 100%) !important;
-    border: 1px solid #fecaca !important;
-    border-left: 5px solid #dc2626 !important;
-}
-.metric-widget.metric-red .metric-icon,
-.metric-widget.metric-rose .metric-icon {
-    background: #fee2e2 !important;
-    color: #dc2626 !important;
-    border: 1px solid #fecaca !important;
-}
-.metric-widget.metric-red .metric-title,
-.metric-widget.metric-rose .metric-title {
-    color: #dc2626 !important;
-}
-.metric-widget.metric-red .metric-value,
-.metric-widget.metric-rose .metric-value {
-    color: #7f1d1d !important;
-}
-
-/* Purple / Indigo Card: Governance, Super Admin, Security, Prescriptions */
-.metric-widget.metric-purple,
-.metric-widget.metric-indigo {
-    background: linear-gradient(145deg, #ffffff 0%, #faf5ff 100%) !important;
-    border: 1px solid #e9d5ff !important;
-    border-left: 5px solid #9333ea !important;
-}
-.metric-widget.metric-purple .metric-icon,
-.metric-widget.metric-indigo .metric-icon {
-    background: #f3e8ff !important;
-    color: #7e22ce !important;
-    border: 1px solid #e9d5ff !important;
-}
-.metric-widget.metric-purple .metric-title,
-.metric-widget.metric-indigo .metric-title {
-    color: #7e22ce !important;
-}
-.metric-widget.metric-purple .metric-value,
-.metric-widget.metric-indigo .metric-value {
-    color: #581c87 !important;
-}
-
-/* Cyan / Teal Card: Online, Integrations, Cloud APIs */
+/* 2. Cyan / Teal Theme (Sub-Branches / Info) */
 .metric-widget.metric-cyan,
-.metric-widget.metric-teal {
-    background: linear-gradient(145deg, #ffffff 0%, #f0fdfa 100%) !important;
+.metric-widget.metric-teal,
+.card.border-start.border-info:not(:has(.card-header)),
+.card-laravel.border-start.border-info:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%) !important;
     border: 1px solid #99f6e4 !important;
-    border-left: 5px solid #0d9488 !important;
+    border-left: 6px solid #0d9488 !important;
 }
 .metric-widget.metric-cyan .metric-icon,
-.metric-widget.metric-teal .metric-icon {
+.metric-widget.metric-teal .metric-icon,
+.card.border-start.border-info .rounded-circle,
+.card.border-start.border-info .metric-icon,
+.card-laravel.border-start.border-info .rounded-circle,
+.card-laravel.border-start.border-info .metric-icon {
     background: #ccfbf1 !important;
     color: #0f766e !important;
     border: 1px solid #99f6e4 !important;
 }
 .metric-widget.metric-cyan .metric-title,
-.metric-widget.metric-teal .metric-title {
+.metric-widget.metric-teal .metric-title,
+.card.border-start.border-info:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-info:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-info:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-info:not(:has(.card-header)) span.small {
     color: #0f766e !important;
 }
 .metric-widget.metric-cyan .metric-value,
-.metric-widget.metric-teal .metric-value {
+.metric-widget.metric-teal .metric-value,
+.card.border-start.border-info:not(:has(.card-header)) h3,
+.card.border-start.border-info:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-info:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-info:not(:has(.card-header)) h4 {
     color: #134e4a !important;
+}
+
+/* 3. Green Theme (Revenue / Success) */
+.metric-widget.metric-green,
+.card.border-start.border-success:not(:has(.card-header)),
+.card-laravel.border-start.border-success:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+    border-left: 6px solid #16a34a !important;
+}
+.metric-widget.metric-green .metric-icon,
+.card.border-start.border-success .rounded-circle,
+.card.border-start.border-success .metric-icon,
+.card-laravel.border-start.border-success .rounded-circle,
+.card-laravel.border-start.border-success .metric-icon {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+.metric-widget.metric-green .metric-title,
+.card.border-start.border-success:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-success:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-success:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-success:not(:has(.card-header)) span.small {
+    color: #16a34a !important;
+}
+.metric-widget.metric-green .metric-value,
+.card.border-start.border-success:not(:has(.card-header)) h3,
+.card.border-start.border-success:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-success:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-success:not(:has(.card-header)) h4 {
+    color: #14532d !important;
+}
+
+/* 4. Purple / Indigo Theme (SaaS Revenue / Governance) */
+.metric-widget.metric-purple,
+.metric-widget.metric-indigo,
+.card.border-start.border-purple:not(:has(.card-header)),
+.card.border-start.border-indigo:not(:has(.card-header)),
+.card-laravel.border-start.border-purple:not(:has(.card-header)),
+.card-laravel.border-start.border-indigo:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%) !important;
+    border: 1px solid #e9d5ff !important;
+    border-left: 6px solid #9333ea !important;
+}
+.metric-widget.metric-purple .metric-icon,
+.metric-widget.metric-indigo .metric-icon,
+.card.border-start.border-purple .rounded-circle,
+.card.border-start.border-purple .metric-icon,
+.card-laravel.border-start.border-purple .rounded-circle,
+.card-laravel.border-start.border-purple .metric-icon {
+    background: #f3e8ff !important;
+    color: #7e22ce !important;
+    border: 1px solid #e9d5ff !important;
+}
+.metric-widget.metric-purple .metric-title,
+.metric-widget.metric-indigo .metric-title,
+.card.border-start.border-purple:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-purple:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-purple:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-purple:not(:has(.card-header)) span.small {
+    color: #7e22ce !important;
+}
+.metric-widget.metric-purple .metric-value,
+.metric-widget.metric-indigo .metric-value,
+.card.border-start.border-purple:not(:has(.card-header)) h3,
+.card.border-start.border-purple:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-purple:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-purple:not(:has(.card-header)) h4 {
+    color: #581c87 !important;
+}
+
+/* 5. Yellow / Amber Theme (Warning / Low Stock / Pending) */
+.metric-widget.metric-yellow,
+.metric-widget.metric-amber,
+.card.border-start.border-warning:not(:has(.card-header)),
+.card-laravel.border-start.border-warning:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%) !important;
+    border: 1px solid #fde68a !important;
+    border-left: 6px solid #d97706 !important;
+}
+.metric-widget.metric-yellow .metric-icon,
+.metric-widget.metric-amber .metric-icon,
+.card.border-start.border-warning .rounded-circle,
+.card.border-start.border-warning .metric-icon,
+.card-laravel.border-start.border-warning .rounded-circle,
+.card-laravel.border-start.border-warning .metric-icon {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+.metric-widget.metric-yellow .metric-title,
+.metric-widget.metric-amber .metric-title,
+.card.border-start.border-warning:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-warning:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-warning:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-warning:not(:has(.card-header)) span.small {
+    color: #b45309 !important;
+}
+.metric-widget.metric-yellow .metric-value,
+.metric-widget.metric-amber .metric-value,
+.card.border-start.border-warning:not(:has(.card-header)) h3,
+.card.border-start.border-warning:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-warning:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-warning:not(:has(.card-header)) h4 {
+    color: #78350f !important;
+}
+
+/* 6. Red / Crimson Theme (Expenses / Expiry / Outflow) */
+.metric-widget.metric-red,
+.metric-widget.metric-rose,
+.card.border-start.border-danger:not(:has(.card-header)),
+.card-laravel.border-start.border-danger:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%) !important;
+    border: 1px solid #fecaca !important;
+    border-left: 6px solid #dc2626 !important;
+}
+.metric-widget.metric-red .metric-icon,
+.metric-widget.metric-rose .metric-icon,
+.card.border-start.border-danger .rounded-circle,
+.card.border-start.border-danger .metric-icon,
+.card-laravel.border-start.border-danger .rounded-circle,
+.card-laravel.border-start.border-danger .metric-icon {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+}
+.metric-widget.metric-red .metric-title,
+.metric-widget.metric-rose .metric-title,
+.card.border-start.border-danger:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-danger:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-danger:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-danger:not(:has(.card-header)) span.small {
+    color: #dc2626 !important;
+}
+.metric-widget.metric-red .metric-value,
+.metric-widget.metric-rose .metric-value,
+.card.border-start.border-danger:not(:has(.card-header)) h3,
+.card.border-start.border-danger:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-danger:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-danger:not(:has(.card-header)) h4 {
+    color: #7f1d1d !important;
+}
+
+/* 7. Secondary / Slate Theme (Drawers / Defaults) */
+.metric-widget.metric-secondary,
+.metric-widget.metric-slate,
+.card.border-start.border-secondary:not(:has(.card-header)),
+.card.border-start.border-dark:not(:has(.card-header)),
+.card-laravel.border-start.border-secondary:not(:has(.card-header)),
+.card-laravel.border-start.border-dark:not(:has(.card-header)) {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1px solid #cbd5e1 !important;
+    border-left: 6px solid #475569 !important;
+}
+.metric-widget.metric-secondary .metric-icon,
+.metric-widget.metric-slate .metric-icon,
+.card.border-start.border-secondary .rounded-circle,
+.card.border-start.border-secondary .metric-icon,
+.card-laravel.border-start.border-secondary .rounded-circle,
+.card-laravel.border-start.border-secondary .metric-icon {
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+.metric-widget.metric-secondary .metric-title,
+.metric-widget.metric-slate .metric-title,
+.card.border-start.border-secondary:not(:has(.card-header)) .text-muted.small,
+.card.border-start.border-secondary:not(:has(.card-header)) span.small,
+.card-laravel.border-start.border-secondary:not(:has(.card-header)) .text-muted.small,
+.card-laravel.border-start.border-secondary:not(:has(.card-header)) span.small {
+    color: #475569 !important;
+}
+.metric-widget.metric-secondary .metric-value,
+.metric-widget.metric-slate .metric-value,
+.card.border-start.border-secondary:not(:has(.card-header)) h3,
+.card.border-start.border-secondary:not(:has(.card-header)) h4,
+.card-laravel.border-start.border-secondary:not(:has(.card-header)) h3,
+.card-laravel.border-start.border-secondary:not(:has(.card-header)) h4 {
+    color: #0f172a !important;
 }
 
 /* ==========================================================================
@@ -1040,4 +1202,273 @@ body {
 .delay-4 { animation-delay: 0.2s; }
 .delay-5 { animation-delay: 0.25s; }
 .delay-6 { animation-delay: 0.3s; }
+
+/* ==========================================================================
+   DAWAFY COMPREHENSIVE MOBILE-FIRST & UNIVERSAL RESPONSIVE ENGINE
+   Supports all screens: Mobile (320px - 576px), Tablet (768px - 991px), Desktop
+   ========================================================================== */
+
+/* Prevent horizontal viewport overflow on all devices */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
+}
+
+/* Touch-friendly interactive buttons on mobile */
+@media (hover: none) and (pointer: coarse) {
+    .btn, .sidebar-link, .nav-link {
+        min-height: 38px;
+    }
+}
+
+/* Universal Table Swiping & Touch Scrolling */
+.table-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 0 !important;
+}
+
+/* ==========================================================================
+   TABLET RESPONSIVENESS (Screens <= 991.98px)
+   ========================================================================== */
+@media (max-width: 991.98px) {
+    .app-main-content {
+        padding: 1.15rem !important;
+    }
+
+    .metric-widget {
+        padding: 1rem !important;
+    }
+
+    .metric-widget .metric-value {
+        font-size: 1.35rem !important;
+    }
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (Screens <= 767.98px)
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    /* Main Canvas Spacing */
+    .app-main-content {
+        padding: 0.75rem !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Top Navigation Compactness */
+    .navbar-laravel {
+        padding: 0.45rem 0.65rem !important;
+    }
+
+    .navbar-brand-title {
+        max-width: 120px !important;
+        font-size: 0.95rem !important;
+    }
+
+    .navbar-laravel .role-badge {
+        display: none !important;
+    }
+
+    /* Mobile Slide-Over Sidebar Drawer */
+    #sidebar.sidebar-traditional {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 285px !important;
+        max-width: 86vw !important;
+        height: 100vh !important;
+        z-index: 1060 !important;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        background: #ffffff !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1rem 0.75rem !important;
+    }
+
+    #sidebar.sidebar-traditional.show {
+        transform: translateX(0) !important;
+    }
+
+    /* Sidebar Mobile Backdrop */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 1055;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .sidebar-backdrop.show {
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+    body.sidebar-open {
+        overflow: hidden !important;
+    }
+
+    /* Banner & Page Header Flex Stack */
+    .laravel-hero-banner {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.65rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    .laravel-hero-banner > div:last-child {
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+
+    .laravel-hero-banner button,
+    .laravel-hero-banner .btn {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    /* Metric Cards Grid Stacking */
+    .metric-widget,
+    .card-stat,
+    .card.border-start.border-4,
+    .card-laravel.border-start.border-4 {
+        padding: 0.95rem 1.05rem !important;
+        border-radius: 12px !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-widget .metric-value,
+    .card.border-start.border-4 h3,
+    .card-laravel.border-start.border-4 h3 {
+        font-size: 1.35rem !important;
+    }
+
+    .metric-widget .metric-icon,
+    .card.border-start.border-4 .rounded-circle,
+    .card.border-start.border-4 .metric-icon,
+    .card-laravel.border-start.border-4 .rounded-circle,
+    .card-laravel.border-start.border-4 .metric-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.25rem !important;
+        border-radius: 10px !important;
+    }
+
+    /* Tables on Mobile: Guaranteed scrollability with optimal min-width */
+    .table-responsive table {
+        min-width: 580px;
+    }
+
+    .table th, .table td {
+        padding: 0.5rem 0.5rem !important;
+        font-size: 0.8125rem !important;
+    }
+
+    /* Card Headers on Mobile */
+    .card-header {
+        padding: 0.65rem 0.75rem !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+
+    .card-header input[type="text"],
+    .card-header .w-25,
+    .card-header .w-50 {
+        width: 100% !important;
+    }
+
+    /* Modals on Mobile */
+    .modal-dialog {
+        margin: 0.5rem auto !important;
+        max-width: calc(100% - 1rem) !important;
+    }
+
+    .modal-body {
+        padding: 1rem !important;
+    }
+
+    /* POS Mobile Grid Tuning */
+    .pos-grand-total-panel {
+        padding: 0.85rem 1rem !important;
+        border-radius: 10px !important;
+    }
+
+    .pos-total-amount {
+        font-size: 1.5rem !important;
+    }
+
+    .pos-cart-badge {
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+
+    .btn-payment-cash,
+    .btn-payment-mobile,
+    .btn-payment-card,
+    .btn-payment-insurance {
+        padding: 0.75rem 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Touch Friendly Form Controls */
+    .form-control, .form-select {
+        min-height: 38px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ==========================================================================
+   EXTRA SMALL MOBILE (Screens <= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+    html {
+        font-size: 13.5px;
+    }
+
+    .btn-sm {
+        padding: 0.35rem 0.65rem !important;
+        font-size: 0.78rem !important;
+    }
+
+    .navbar-laravel {
+        gap: 0.35rem;
+    }
+
+    .navbar-laravel select.form-select-sm {
+        max-width: 105px !important;
+        font-size: 0.75rem !important;
+        padding-left: 0.4rem !important;
+        padding-right: 1.2rem !important;
+    }
+
+    /* Full width buttons on extra small screens */
+    .laravel-hero-banner .btn,
+    .dashboard-accordion-header .badge {
+        font-size: 0.75rem !important;
+    }
+
+    /* POS Checkout Buttons stacked for easy thumb tap */
+    .row.g-2 > .col-6 {
+        width: 100% !important;
+    }
+}
+
+
 

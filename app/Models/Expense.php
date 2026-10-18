@@ -11,11 +11,17 @@ class Expense extends Model
 
     protected $fillable = [
         'tenant_id',
+        'user_id',
         'category',
         'amount',
         'expense_date',
         'description',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function tenant()
     {

@@ -153,6 +153,19 @@
         .footer-text a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem;
+            }
+            .login-card {
+                padding: 1.75rem 1.25rem;
+                border-radius: 12px;
+            }
+            .brand-section h2 {
+                font-size: 1.35rem;
+            }
+        }
     </style>
 </head>
 <body>

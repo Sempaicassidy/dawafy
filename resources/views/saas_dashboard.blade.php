@@ -8,6 +8,9 @@
         <p class="text-white-50 mb-0">Control pharmacy tenants, activate branch licenses, manage contract add-ons, and MRR billing.</p>
     </div>
     <div class="d-flex gap-2">
+        <a href="{{ route('saas.payment_methods') }}" class="btn btn-outline-warning text-white shadow rounded-pill px-3">
+            <i class="bi bi-credit-card-2-front me-1"></i> Payment Methods
+        </a>
         <a href="{{ route('saas.super_admins') }}" class="btn btn-outline-light shadow rounded-pill px-3">
             <i class="bi bi-shield-lock me-1"></i> Super Admins
         </a>

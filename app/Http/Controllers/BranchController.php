@@ -16,7 +16,9 @@ class BranchController extends Controller
         if ($isSuperAdmin) {
             $branches = Tenant::whereNotNull('parent_id')->get();
         } elseif ($tenantId) {
-            $branches = Tenant::where('parent_id', $tenantId)->get();
+            $currentTenant = Tenant::find($tenantId);
+            $hqId = $currentTenant?->parent_id ?? $tenantId;
+            $branches = Tenant::where('parent_id', $hqId)->get();
         } else {
             $branches = collect();
         }
@@ -38,7 +40,11 @@ class BranchController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        $parentId = auth()->user()?->tenant_id ?? Tenant::first()?->id ?? 1;
+        $user = auth()->user();
+        $tenantId = $user?->tenant_id ?? session('tenant_id') ?? session('masquerade_tenant_id') ?? Tenant::first()?->id ?? 1;
+        $currentTenant = Tenant::find($tenantId);
+        $parentId = $currentTenant?->parent_id ?? $tenantId;
+
         $validated['parent_id'] = $parentId;
         $validated['status'] = 'Active';
 

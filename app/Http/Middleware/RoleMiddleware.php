@@ -43,7 +43,10 @@ class RoleMiddleware
         }
 
         $userRoleName = $user->role?->name;
-        if (empty($roles) || in_array($activeRole, $checkRoles) || in_array($userRoleName, $checkRoles)) {
+        $userAllRoles = $user->all_roles ?? [$userRoleName ?? 'Manager'];
+        $hasAnyAssignedRole = !empty(array_intersect($userAllRoles, $checkRoles));
+
+        if (empty($roles) || in_array($activeRole, $checkRoles) || in_array($userRoleName, $checkRoles) || $hasAnyAssignedRole) {
             return $next($request);
         }
 

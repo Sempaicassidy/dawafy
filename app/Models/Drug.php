@@ -54,13 +54,57 @@ class Drug extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
+    public function refillRequests()
+    {
+        return $this->hasMany(StockRefillRequest::class);
+    }
+
     public function getStockAttribute()
     {
-        return $this->batches()->sum('quantity');
+        return (int)$this->batches()->sum('quantity');
     }
 
     public function getOutOfStockAttribute()
     {
-        return $this->stock <= $this->reorder_level;
+        return $this->stock <= 0;
+    }
+
+    public function getIsLowStockAttribute()
+    {
+        $reorder = (int)($this->reorder_level ?: 10);
+        return $this->stock > 0 && $this->stock <= $reorder;
+    }
+
+    public function getStockLightAttribute()
+    {
+        if ($this->stock <= 0) {
+            return 'red'; // Out of stock
+        }
+        $reorder = (int)($this->reorder_level ?: 10);
+        if ($this->stock <= $reorder) {
+            return 'yellow'; // Low stock
+        }
+        return 'green'; // In stock
+    }
+
+    public function getTmdaShortAttribute()
+    {
+        $cat = strtolower($this->category?->name ?? '');
+        if (str_contains($cat, 'prescription') || str_contains($cat, 'pom')) {
+            return 'POM';
+        }
+        if (str_contains($cat, 'pharmacy') || str_contains($cat, 'p-only') || str_contains($cat, 'p medicine')) {
+            return 'P';
+        }
+        if (str_contains($cat, 'controlled')) {
+            return 'Controlled';
+        }
+        if (str_contains($cat, 'general') || str_contains($cat, 'gsl') || str_contains($cat, 'gsm') || str_contains($cat, 'otc')) {
+            return 'GSL';
+        }
+        if (str_contains($cat, 'addo')) {
+            return 'ADDO';
+        }
+        return 'POM';
     }
 }

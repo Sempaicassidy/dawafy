@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        date_default_timezone_set(config('app.timezone', 'Africa/Dar_es_Salaam'));
+
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
             $sysSettings = [];
             if (\Illuminate\Support\Facades\Auth::check()) {
@@ -27,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
                     $tenant = \App\Models\Tenant::find($tenantId);
                     if ($tenant) {
                         $sysSettings = $tenant->toArray();
+                        $sysSettings['company_name'] = $tenant->name ?? 'Dawafy Pharmacy';
+                        $sysSettings['logo_url'] = !empty($tenant->logo_path) ? asset($tenant->logo_path) : null;
                     }
                 }
             }

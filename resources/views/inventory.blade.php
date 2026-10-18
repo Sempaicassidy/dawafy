@@ -84,17 +84,17 @@
     <div class="card-header bg-light d-flex justify-content-between align-items-center py-2 px-3">
         <ul class="nav nav-tabs card-header-tabs" id="inventoryTabs">
             <li class="nav-item">
-                <button class="nav-link active" onclick="switchInventoryTab('active', this)">
+                <button class="nav-link active" id="tabBtnActive" onclick="switchInventoryTab('active', this)">
                     Active Stock (<?= count($drugs) ?>)
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" onclick="switchInventoryTab('out_of_stock', this)">
-                    Out of Stock (<?= count($out_of_stock_drugs) ?>)
+                <button class="nav-link" id="tabBtnOutOfStock" onclick="switchInventoryTab('out_of_stock', this)">
+                    Out of Stock & Reorders (<?= count($out_of_stock_drugs) ?>)
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" onclick="switchInventoryTab('expired', this)">
+                <button class="nav-link" id="tabBtnExpired" onclick="switchInventoryTab('expired', this)">
                     Expired Stock (<?= count($expired_drugs) ?>)
                 </button>
             </li>
@@ -513,5 +513,17 @@ function openAddStockModal(drugId, drugName) {
     document.getElementById('stockDrugName').value = drugName;
     new bootstrap.Modal(document.getElementById('addStockModal')).show();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab') || window.location.hash.replace('#', '');
+    if (tab === 'out_of_stock' || tab === 'low_stock' || tab === 'reorders') {
+        const btn = document.getElementById('tabBtnOutOfStock');
+        if (btn) switchInventoryTab('out_of_stock', btn);
+    } else if (tab === 'expired' || tab === 'expiring') {
+        const btn = document.getElementById('tabBtnExpired');
+        if (btn) switchInventoryTab('expired', btn);
+    }
+});
 </script>
 @endsection

@@ -35,22 +35,40 @@ class ReportController extends Controller
 
         $recent_transactions = [];
         try {
-            $recentQuery = Transaction::with(['user', 'patient']);
+            $recentQuery = Transaction::with(['user', 'patient', 'customer', 'cashier', 'pharmacist', 'items.drug']);
             if ($tenant_id) {
                 $recentQuery->where('tenant_id', $tenant_id);
             }
+            if (request('my_sales') == '1' || request()->has('my_sales')) {
+                $userId = auth()->id();
+                $recentQuery->where(function($q) use ($userId) {
+                    $q->where('cashier_id', $userId)
+                      ->orWhere('user_id', $userId)
+                      ->orWhere('pharmacist_id', $userId);
+                });
+            }
             $recent_transactions = $recentQuery
                 ->latest()
-                ->limit(20)
+                ->limit(50)
                 ->get()
                 ->map(function ($t) {
                     return [
                         'id' => $t->id,
-                        'cashier_name' => $t->user?->name ?? $t->user?->username ?? 'Staff',
-                        'customer_name' => $t->patient?->name ?? 'Walk-in Customer',
+                        'cashier_name' => $t->cashier?->name ?? $t->user?->name ?? 'Staff',
+                        'pharmacist_name' => $t->pharmacist?->name ?? 'Pharmacist',
+                        'customer_name' => $t->patient?->name ?? ($t->customer?->name ?? 'Walk-in Customer'),
                         'payment_method' => $t->payment_method ?? 'Cash',
                         'total_amount' => $t->total_amount,
                         'created_at' => $t->created_at,
+                        'status' => $t->status,
+                        'items' => $t->items->map(function($i) {
+                            return [
+                                'name' => $i->drug?->name ?? ($i->item_name ?? 'Medicine'),
+                                'quantity' => $i->quantity,
+                                'price' => $i->unit_price ?? $i->price,
+                                'subtotal' => $i->subtotal ?? ($i->quantity * ($i->unit_price ?? $i->price)),
+                            ];
+                        })->toArray(),
                     ];
                 });
         } catch (\Exception $e) {
@@ -78,12 +96,21 @@ class ReportController extends Controller
             $stock_valuation_list = [];
         }
 
+        $total_expenses = (float) (\App\Models\Expense::where('tenant_id', $tenant_id)->sum('amount') ?? 0);
+        $expenses_by_category = \App\Models\Expense::where('tenant_id', $tenant_id)
+            ->select('category', DB::raw('SUM(amount) as total'), DB::raw('COUNT(*) as count'))
+            ->groupBy('category')
+            ->orderByDesc('total')
+            ->get();
+
         return view('reports', compact(
             'total_sales',
             'total_orders',
             'inventory_value',
             'recent_transactions',
-            'stock_valuation_list'
+            'stock_valuation_list',
+            'total_expenses',
+            'expenses_by_category'
         ));
     }
 
@@ -99,7 +126,12 @@ class ReportController extends Controller
 
     public function auditLogs()
     {
-        return $this->index();
+        $tenant_id = auth()->user()?->tenant_id ?? session('tenant_id') ?? session('masquerade_tenant_id') ?? 1;
+        $logs = AuditLog::with(['user.role'])
+            ->where('tenant_id', $tenant_id)
+            ->latest()
+            ->paginate(25);
+        return view('audit_logs', compact('logs'));
     }
 
     public function daily()

@@ -56,13 +56,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/index', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // POS Routes
+    // POS Routes & Separated Dispense Workflow
     Route::get('/pos', [POSController::class, 'index'])->name('pos.index');
+    Route::get('/receive-payments', [POSController::class, 'receivePaymentsDesk'])->name('pos.receive_payments');
     Route::get('/pos/search', [POSController::class, 'searchDrugs'])->name('pos.search');
     Route::post('/pos/transaction', [POSController::class, 'createTransaction'])->name('pos.transaction');
+    Route::post('/pos/send-to-cashier', [POSController::class, 'sendToCashier'])->name('pos.send_to_cashier');
+    Route::get('/pos/pending-payments', [POSController::class, 'getPendingPayments'])->name('pos.pending_payments');
+    Route::post('/pos/transactions/{id}/approve-payment', [POSController::class, 'approvePayment'])->name('pos.approve_payment');
+    Route::get('/pos/ready-to-dispense', [POSController::class, 'getReadyToDispense'])->name('pos.ready_to_dispense');
+    Route::post('/pos/transactions/{id}/confirm-dispense', [POSController::class, 'confirmDispense'])->name('pos.confirm_dispense');
+    Route::get('/pos/receipt/{id}', [POSController::class, 'getReceiptDetails'])->name('pos.receipt_details');
     Route::get('/pos/customer-lookup', [POSController::class, 'findCustomer'])->name('pos.customer_lookup');
     Route::post('/pos/customer-register', [POSController::class, 'registerCustomer'])->name('pos.customer_register');
     Route::any('/pos_api.php', [POSController::class, 'legacyApi'])->name('pos.legacy_api');
+
+    // Stock Refill Requests & Manager Approval Routes
+    Route::post('/refills/request', [\App\Http\Controllers\StockRefillController::class, 'requestRefill'])->name('refills.request');
+    Route::post('/refills/{id}/approve', [\App\Http\Controllers\StockRefillController::class, 'approveRefill'])->name('refills.approve');
+    Route::post('/refills/{id}/reject', [\App\Http\Controllers\StockRefillController::class, 'rejectRefill'])->name('refills.reject');
 
     // Inventory Routes
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
@@ -114,6 +126,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/insurance', [InsuranceController::class, 'index'])->name('insurance.index');
     Route::get('/insurance/create-provider', [InsuranceController::class, 'createProvider'])->name('insurance.create_provider');
     Route::post('/insurance/provider', [InsuranceController::class, 'storeProvider'])->name('insurance.store_provider');
+    Route::post('/insurance/providers/{id}/settings', [InsuranceController::class, 'updateSettings'])->name('insurance.update_settings');
+    Route::post('/insurance/providers/{id}/test-connection', [InsuranceController::class, 'testConnection'])->name('insurance.test_connection');
+    Route::post('/insurance/verify-card', [InsuranceController::class, 'verifyCard'])->name('insurance.verify_card');
     Route::get('/insurance/create-claim', [InsuranceController::class, 'createClaim'])->name('insurance.create_claim');
     Route::post('/insurance/claim', [InsuranceController::class, 'storeClaim'])->name('insurance.store_claim');
     Route::post('/insurance/claim/{claim}/approve', [InsuranceController::class, 'approveClaim'])->name('insurance.approve_claim');
@@ -135,6 +150,8 @@ Route::middleware(['auth'])->group(function () {
     // Expense Routes
     Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
     Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
+    Route::post('/expenses/{id}/update', [ExpenseController::class, 'update'])->name('expenses.update');
+    Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 
     // Compounding Routes
     Route::get('/compounding', [CompoundingController::class, 'index'])->name('compounding.index');
@@ -153,12 +170,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Role Switcher Route
     Route::post('/switch-role', function (\Illuminate\Http\Request $request) {
-        $actualRole = session('actual_role') ?? (auth()->user()?->role?->name ?? 'Manager');
-        $allowedRoles = ['Manager', 'Admin', 'Super Admin', 'Pharmacist'];
-        if (in_array($actualRole, $allowedRoles) || !empty(session('masquerade_tenant_id'))) {
-            if ($request->has('active_role')) {
-                session(['role' => $request->input('active_role')]);
-            }
+        $user = auth()->user();
+        $targetRole = $request->input('active_role');
+        $userAllRoles = $user?->all_roles ?? [];
+
+        $isElevated = ($user?->isManager() || !empty(session('masquerade_tenant_id')));
+
+        if ($targetRole && ($isElevated || in_array($targetRole, $userAllRoles))) {
+            session(['role' => $targetRole]);
         }
         return back();
     })->name('switch_role');
@@ -220,6 +239,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/saas-dashboard/super-admins/{user}/delete', [SaasDashboardController::class, 'deleteSuperAdmin'])->name('saas.delete_super_admin');
         Route::post('/saas-dashboard/super-admins/{user}/reset-password', [SaasDashboardController::class, 'resetSuperAdminPassword'])->name('saas.reset_super_admin_password');
         Route::get('/saas-dashboard/audit-logs', [SaasDashboardController::class, 'auditLogs'])->name('saas.audit_logs');
+
+        // Platform Payment Methods Governance (Enable / Disable)
+        Route::get('/saas-dashboard/payment-methods', [SaasDashboardController::class, 'paymentMethods'])->name('saas.payment_methods');
+        Route::post('/saas-dashboard/payment-methods/{paymentMethod}/toggle', [SaasDashboardController::class, 'togglePaymentMethod'])->name('saas.toggle_payment_method');
+        Route::post('/saas-dashboard/payment-methods/{paymentMethod}/update', [SaasDashboardController::class, 'updatePaymentMethod'])->name('saas.update_payment_method');
     });
 });
 

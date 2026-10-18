@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\AuditLog;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -258,5 +259,85 @@ class SaasDashboardController extends Controller
             ->paginate(50);
 
         return view('saas_audit_logs', compact('logs'));
+    }
+
+    /**
+     * Display Payment Methods Governance Portal for Super Admin.
+     */
+    public function paymentMethods()
+    {
+        $methods = PaymentMethod::orderBy('sort_order', 'asc')->get();
+        $totalMethods = $methods->count();
+        $activeCount = $methods->where('is_enabled', true)->count();
+        $disabledCount = $totalMethods - $activeCount;
+
+        return view('saas_payment_methods', compact('methods', 'totalMethods', 'activeCount', 'disabledCount'));
+    }
+
+    /**
+     * Toggle enabled status of a payment method. Cash is strictly protected.
+     */
+    public function togglePaymentMethod(Request $request, PaymentMethod $paymentMethod)
+    {
+        // Safety lock: Cash can NEVER be disabled
+        if ($paymentMethod->is_locked || strcasecmp($paymentMethod->name, 'Cash') === 0 || strcasecmp($paymentMethod->code, 'cash') === 0) {
+            $msg = "Njia ya malipo ya 'Cash' (Pesa Taslimu) ni ya msingi ya mfumo na imefungwa kisheria, haiwezi kuzimwa!";
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => $msg], 403);
+            }
+            return redirect()->back()->with('error', $msg);
+        }
+
+        $userId = auth()->id() ?? User::whereHas('role', fn($q) => $q->where('name', 'Super Admin'))->value('id') ?? 1;
+
+        $paymentMethod->is_enabled = !$paymentMethod->is_enabled;
+        $paymentMethod->updated_by = $userId;
+        $paymentMethod->save();
+
+        $actionStatus = $paymentMethod->is_enabled ? 'IMEWASHWA (ENABLED)' : 'IMEZIMWA (DISABLED)';
+        $adminUsername = auth()->user()->username ?? 'Super Admin';
+
+        AuditLog::create([
+            'user_id' => $userId,
+            'tenant_id' => null,
+            'action' => 'UPDATE',
+            'details' => "Super Admin {$adminUsername} changed payment method '{$paymentMethod->name}' to {$actionStatus}",
+            'ip_address' => $request->ip(),
+        ]);
+
+        $msg = "Njia ya malipo ya '{$paymentMethod->display_name}' sasa imefanikiwa kuwa {$actionStatus}.";
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'is_enabled' => $paymentMethod->is_enabled,
+                'message' => $msg,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $msg);
+    }
+
+    /**
+     * Update payment method display name or description.
+     */
+    public function updatePaymentMethod(Request $request, PaymentMethod $paymentMethod)
+    {
+        $validated = $request->validate([
+            'display_name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:500',
+            'sort_order' => 'nullable|integer',
+        ]);
+
+        $userId = auth()->id() ?? User::whereHas('role', fn($q) => $q->where('name', 'Super Admin'))->value('id') ?? 1;
+
+        $paymentMethod->update([
+            'display_name' => $validated['display_name'],
+            'description' => $validated['description'] ?? $paymentMethod->description,
+            'sort_order' => $validated['sort_order'] ?? $paymentMethod->sort_order,
+            'updated_by' => $userId,
+        ]);
+
+        return redirect()->back()->with('success', "Taarifa za njia ya malipo '{$paymentMethod->name}' zimesasishwa kikamilifu.");
     }
 }

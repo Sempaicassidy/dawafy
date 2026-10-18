@@ -97,9 +97,7 @@ class AuthController extends Controller
             // Redirect based on role
             return match($roleName) {
                 'Super Admin' => redirect()->route('saas.dashboard'),
-                'Cashier' => redirect()->route('pos.index'),
-                'Pharmacist' => redirect()->route('prescriptions.index'),
-                'Manager', 'Admin' => redirect()->route('dashboard'),
+                'Cashier', 'Pharmacist', 'Manager', 'Admin' => redirect()->route('dashboard'),
                 default => redirect()->route('dashboard'),
             };
         }

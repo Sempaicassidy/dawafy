@@ -11,8 +11,22 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
+    protected function checkInventoryPermission()
+    {
+        $user = auth()->user();
+        $activeRole = session('role') ?? $user?->role?->name ?? 'Pharmacist';
+        if ($activeRole === 'Pharmacist' || $activeRole === 'Cashier' || ($user && !$user->isManager() && !$user->isSuperAdmin())) {
+            return false;
+        }
+        return true;
+    }
+
     public function index()
     {
+        if (!$this->checkInventoryPermission()) {
+            return redirect()->route('dashboard')->with('error', 'Access Denied: Pharmacists and Cashiers do not have permission to manage central inventory or alter drug prices. Use "Request Stock Refill" on POS.');
+        }
+
         $tenant_id = auth()->user()?->tenant_id ?? session('tenant_id') ?? session('masquerade_tenant_id') ?? 1;
 
         $categories = Category::all();
@@ -142,6 +156,10 @@ class InventoryController extends Controller
 
     public function store(Request $request)
     {
+        if (!$this->checkInventoryPermission()) {
+            return redirect()->route('dashboard')->with('error', 'Access Denied: Pharmacists and Cashiers cannot add or modify inventory.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string',
             'brand_name' => 'nullable|string',
@@ -197,6 +215,10 @@ class InventoryController extends Controller
 
     public function update(Request $request, $id = null)
     {
+        if (!$this->checkInventoryPermission()) {
+            return redirect()->route('dashboard')->with('error', 'Access Denied: Pharmacists and Cashiers cannot alter drug details or prices.');
+        }
+
         $drugId = $id ?? $request->input('drug_id');
         $drug = Drug::findOrFail($drugId);
 
@@ -218,6 +240,9 @@ class InventoryController extends Controller
 
     public function addStock(Request $request)
     {
+        if (!$this->checkInventoryPermission()) {
+            return redirect()->route('dashboard')->with('error', 'Access Denied: Pharmacists cannot manually add stock batches.');
+        }
         $validated = $request->validate([
             'drug_id' => 'required|exists:drugs,id',
             'quantity' => 'required|integer|min:1',
