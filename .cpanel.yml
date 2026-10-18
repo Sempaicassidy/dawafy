@@ -1,6 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=${DEPLOYPATH:-$HOME/public_html/}
+    - export DEPLOYPATH=/home/haulaent/public_html/dawafy
+    - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp .htaccess $DEPLOYPATH 2>/dev/null || :
+    - /bin/cp -f .htaccess $DEPLOYPATH 2>/dev/null || :
+    - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache 2>/dev/null || :
